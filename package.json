@@ -21,6 +21,7 @@
     "test:sync:local": "bun scripts/test-sync-local.ts"
   },
   "dependencies": {
+    "noutube": "link:noutube",
     "@expo/ui": "~58.0.27",
     "@legendapp/state": "^3.0.0-beta.43",
     "@material/material-color-utilities": "^0.4.0",
@@ -30,7 +31,7 @@
     "@react-native-vector-icons/material-icons": "^13.1.2",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/native": "^7.1.6",
-    "@supabase/supabase-js": "^2.54.0",
+    "@supabase/supabase-js": "^2.119.0",
     "@tanstack/react-query": "^5.84.2",
     "cheerio": "^1.1.0",
     "dayjs": "^1.11.18",
@@ -51,6 +52,7 @@
     "expo-router": "~58.0.30",
     "expo-sharing": "~58.0.22",
     "expo-splash-screen": "~58.0.13",
+    "expo-sqlite": "~58.0.15",
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.7",
     "expo-task-manager": "~58.0.13",
@@ -79,6 +81,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@types/bun": "^1.2.17",
+    "@types/node": "^26.6.6",
     "@types/papaparse": "^5.3.16",
     "@types/react": "~19.3.0",
     "eslint": "^9.25.0",

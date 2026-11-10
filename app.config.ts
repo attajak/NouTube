@@ -15,9 +15,10 @@ const intentFilters = [
   },
 ]
 
-module.exports = ({ config }: { config: ExpoConfig }) => {
+export default ({ config }: { config: ExpoConfig }): ExpoConfig => {
   return {
-    name: 'NouTube',
+    ...config, // Preserves any default config passed by Expo
+    name: 'NouTube_dev',
     slug: 'noutube',
     version,
     icon: './assets/images/icon.png',
@@ -25,7 +26,7 @@ module.exports = ({ config }: { config: ExpoConfig }) => {
     userInterfaceStyle: 'automatic',
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'jp.nonbili.noutube',
+      bundleIdentifier: 'jp.nonbili.noutube_dev',
       appleTeamId: 'NXW8RMPV8L',
       buildNumber,
       infoPlist: {
@@ -43,7 +44,7 @@ module.exports = ({ config }: { config: ExpoConfig }) => {
         backgroundColor: '#ffffff',
       },
       predictiveBackGestureEnabled: false,
-      package: 'jp.nonbili.noutube',
+      package: 'com.attajak.noutube',
       intentFilters,
     },
     web: {
@@ -93,9 +94,15 @@ module.exports = ({ config }: { config: ExpoConfig }) => {
         },
       ],
       'expo-web-browser',
+      'expo-sqlite',
     ],
     experiments: {
       typedRoutes: true,
+    },
+    'extra': {
+      'eas': {
+        'projectId': '90bcee38-cb5b-4644-b495-75e3894e5c0a',
+      },
     },
   }
 }

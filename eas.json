@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "version": ">= 27.5.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "credentialsSource": "remote",
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "credentialsSource": "remote",
+      "distribution": "internal"
+    },
+    "production": {
+      "credentialsSource": "remote",
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
