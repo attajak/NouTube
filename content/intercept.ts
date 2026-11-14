@@ -142,8 +142,12 @@ export function intercept() {
     let filteredJson: any
     const read = (asText: boolean) => {
       const original = () => (asText ? textGetter : responseGetter).call(this)
-      if (!match || this.readyState !== 4 || this.status !== 200 ||
-          (this.responseType !== '' && this.responseType !== 'text' && this.responseType !== 'json')) {
+      if (
+        !match ||
+        this.readyState !== 4 ||
+        this.status !== 200 ||
+        (this.responseType !== '' && this.responseType !== 'text' && this.responseType !== 'json')
+      ) {
         return original()
       }
       // Preserve the native InvalidStateError for responseText on JSON XHRs.

@@ -67,7 +67,7 @@ jobs:
           body_path: extension/changelogs/v${{ env.VER }}.txt
           files: extension/.output/*.zip
           # The `latest` pointer belongs to the Android app's `v*` releases.
-          make_latest: "false"
+          make_latest: 'false'
 
       - name: submit to Chrome Web Store
         if: startsWith(github.ref, 'refs/tags/extension/v') && env.HAS_CHROME == 'true'

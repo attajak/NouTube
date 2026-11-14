@@ -33,9 +33,7 @@ export function getPlayingPlaylist(response: any, playingVideoId?: string): any 
  */
 export function getHeldPlaylist(responses: any[], playingVideoId?: string, listId?: string | null): any | undefined {
   if (!playingVideoId || !listId) return
-  const playlists = responses
-    .flatMap(getPlaylists)
-    .filter((playlist) => playlist.playlistId == listId)
+  const playlists = responses.flatMap(getPlaylists).filter((playlist) => playlist.playlistId == listId)
   return (
     playlists.find((playlist) => isPlaylistCurrent(playlist, playingVideoId)) ||
     playlists.find((playlist) => playlist.contents.some((entry: any) => getVideoId(entry) == playingVideoId))

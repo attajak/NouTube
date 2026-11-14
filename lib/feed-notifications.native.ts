@@ -93,28 +93,30 @@ async function ensureChannel() {
 
 let registration = Promise.resolve(false)
 export function syncFeedNotificationTask(): Promise<boolean> {
-  registration = registration.catch(() => false).then(async () => {
-    await when(syncState(settings$).isPersistLoaded)
-    let available = false
-    // Without any way to notify the opt-in is kept for foreground toasts, but
-    // background delivery stays unavailable.
-    if (canNotify && settings$.feedNotificationsEnabled.get()) {
-      if (!(await hasPermission())) {
-        settings$.feedNotificationsEnabled.set(false)
-      } else {
-        available = (await BackgroundTask.getStatusAsync()) === BackgroundTask.BackgroundTaskStatus.Available
+  registration = registration
+    .catch(() => false)
+    .then(async () => {
+      await when(syncState(settings$).isPersistLoaded)
+      let available = false
+      // Without any way to notify the opt-in is kept for foreground toasts, but
+      // background delivery stays unavailable.
+      if (canNotify && settings$.feedNotificationsEnabled.get()) {
+        if (!(await hasPermission())) {
+          settings$.feedNotificationsEnabled.set(false)
+        } else {
+          available = (await BackgroundTask.getStatusAsync()) === BackgroundTask.BackgroundTaskStatus.Available
+        }
       }
-    }
-    // System restrictions suspend delivery without discarding the user's opt-in.
-    const enabled = settings$.feedsEnabled.get() && settings$.feedNotificationsEnabled.get() && available
-    const registered = await TaskManager.isTaskRegisteredAsync(TASK_NAME)
-    if (enabled && !registered) {
-      await BackgroundTask.registerTaskAsync(TASK_NAME, { minimumInterval: 120 })
-    } else if (!enabled && registered) {
-      await BackgroundTask.unregisterTaskAsync(TASK_NAME)
-    }
-    return enabled
-  })
+      // System restrictions suspend delivery without discarding the user's opt-in.
+      const enabled = settings$.feedsEnabled.get() && settings$.feedNotificationsEnabled.get() && available
+      const registered = await TaskManager.isTaskRegisteredAsync(TASK_NAME)
+      if (enabled && !registered) {
+        await BackgroundTask.registerTaskAsync(TASK_NAME, { minimumInterval: 120 })
+      } else if (!enabled && registered) {
+        await BackgroundTask.unregisterTaskAsync(TASK_NAME)
+      }
+      return enabled
+    })
   return registration
 }
 
@@ -141,9 +143,10 @@ export async function notifyFeedVideos(updates: FeedNotificationUpdate[]): Promi
   const backgroundEnabled = await syncFeedNotificationTask()
   if (!settings$.feedNotificationsEnabled.get()) return
   await applyNotificationLanguage()
-  const body = updates.length === 1
-    ? t('feeds.notificationBody', { count, channel: updates[0].channel })
-    : t('feeds.notificationSummary', { count, channels: updates.length })
+  const body =
+    updates.length === 1
+      ? t('feeds.notificationBody', { count, channel: updates[0].channel })
+      : t('feeds.notificationSummary', { count, channels: updates.length })
   const showFeedToast = () => pushToast(body, () => ui$.feedModalOpen.set(true))
   if (isAppActive()) {
     showFeedToast()
@@ -159,7 +162,13 @@ export async function notifyFeedVideos(updates: FeedNotificationUpdate[]): Promi
   if (nativeNotifications) {
     // Each one keeps its own id, as expo-notifications posts them; 777 is the media notification's.
     nativeId = (nativeId + 1) % 0x7fffffff || 1000
-    nativeNotifications.postNotification?.(CHANNEL_ID, t('feeds.notificationTitle'), nativeId, t('feeds.notificationTitle'), body)
+    nativeNotifications.postNotification?.(
+      CHANNEL_ID,
+      t('feeds.notificationTitle'),
+      nativeId,
+      t('feeds.notificationTitle'),
+      body,
+    )
     return
   }
   await Notifications?.scheduleNotificationAsync({
@@ -191,7 +200,10 @@ export function listenFeedNotifications(openFeed: () => void): () => void {
     void notifications.clearLastNotificationResponseAsync()
   }
   const subscription = notifications.addNotificationResponseReceivedListener(handle)
-  void notifications.getLastNotificationResponseAsync().then(handle).catch((error) => console.error('Feed notification response failed:', error))
+  void notifications
+    .getLastNotificationResponseAsync()
+    .then(handle)
+    .catch((error) => console.error('Feed notification response failed:', error))
   return () => {
     active = false
     subscription.remove()

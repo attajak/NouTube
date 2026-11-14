@@ -168,7 +168,8 @@ describe('intercept blocklist filtering', () => {
     }
 
     const transformed = JSON.parse(transformBrowseResponse(JSON.stringify(response), blocklist))
-    const items = transformed.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
+    const items =
+      transformed.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
 
     expect(items).toHaveLength(1)
     expect(items[0].richItemRenderer.content.videoRenderer.title.runs[0].text).toBe('Keep me')
@@ -244,7 +245,8 @@ describe('intercept blocklist filtering', () => {
       keywords: [],
     })
     const transformedName = JSON.parse(transformBrowseResponse(JSON.stringify(response), blocklistByName))
-    const itemsName = transformedName.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
+    const itemsName =
+      transformedName.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
     expect(itemsName).toHaveLength(1)
     expect(itemsName[0].richItemRenderer.content.lockupViewModel.contentMetadata.runs[0].text).toBe('Keep me')
 
@@ -254,7 +256,8 @@ describe('intercept blocklist filtering', () => {
       keywords: [],
     })
     const transformedUrl = JSON.parse(transformBrowseResponse(JSON.stringify(response), blocklistByUrl))
-    const itemsUrl = transformedUrl.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
+    const itemsUrl =
+      transformedUrl.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
     expect(itemsUrl).toHaveLength(1)
     expect(itemsUrl[0].richItemRenderer.content.lockupViewModel.contentMetadata.runs[0].text).toBe('Keep me')
 
@@ -264,7 +267,8 @@ describe('intercept blocklist filtering', () => {
       keywords: [],
     })
     const transformedId = JSON.parse(transformBrowseResponse(JSON.stringify(response), blocklistById))
-    const itemsId = transformedId.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
+    const itemsId =
+      transformedId.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
     expect(itemsId).toHaveLength(1)
     expect(itemsId[0].richItemRenderer.content.lockupViewModel.contentMetadata.runs[0].text).toBe('Keep me')
   })
@@ -324,7 +328,9 @@ describe('intercept original title rewriting', () => {
       },
     ]
 
-    const transformed = JSON.parse(transformGetWatchResponse(JSON.stringify(response), { showOriginalVideoTitle: true }))
+    const transformed = JSON.parse(
+      transformGetWatchResponse(JSON.stringify(response), { showOriginalVideoTitle: true }),
+    )
 
     expect(transformed[0].playerResponse.microformat.playerMicroformatRenderer.title.simpleText).toBe('Original title')
   })
@@ -371,7 +377,8 @@ describe('intercept original title rewriting', () => {
     const transformed = JSON.parse(
       transformBrowseResponse(JSON.stringify(response), undefined, { showOriginalVideoTitle: true }),
     )
-    const items = transformed.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
+    const items =
+      transformed.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.richGridRenderer.contents
 
     expect(items[0].richItemRenderer.content.videoRenderer.title.runs[0].text).toBe('Original title')
     expect(items[1].richItemRenderer.content.videoRenderer.title.runs[0].text).toBe('Still translated')
@@ -416,21 +423,58 @@ describe('intercept original title rewriting', () => {
 
 describe('intercept ad blocking', () => {
   it('filters Shorts across feed sections and continuations only when requested', () => {
-    const ordinary = { videoWithContextRenderer: { navigationEndpoint: {
-      commandMetadata: { webCommandMetadata: { url: '/watch?v=normal' } },
-    }, menu: { url: '/shorts/not-the-card' } } }
+    const ordinary = {
+      videoWithContextRenderer: {
+        navigationEndpoint: {
+          commandMetadata: { webCommandMetadata: { url: '/watch?v=normal' } },
+        },
+        menu: { url: '/shorts/not-the-card' },
+      },
+    }
     const shorts = { richItemRenderer: { content: { shortsLockupViewModel: { entityId: 'short' } } } }
-    const compact = { compactVideoRenderer: { navigationEndpoint: { commandMetadata: {
-      webCommandMetadata: { url: '/shorts/compact' },
-    } } } }
+    const compact = {
+      compactVideoRenderer: {
+        navigationEndpoint: {
+          commandMetadata: {
+            webCommandMetadata: { url: '/shorts/compact' },
+          },
+        },
+      },
+    }
     const grid = { gridVideoRenderer: { navigationEndpoint: { reelWatchEndpoint: { videoId: 'grid' } } } }
-    const response = { contents: [ordinary, shorts, { richSectionRenderer: { content: {
-      gridShelfViewModel: { contents: [{ shortsLockupViewModel: {} }] },
-    } } }], onResponseReceivedActions: [{ appendContinuationItemsAction: { continuationItems: [
-      { videoWithContextRenderer: { navigationEndpoint: { commandMetadata: {
-        webCommandMetadata: { url: '/shorts/abc' },
-      } } } }, ordinary, compact, grid,
-    ] } }] }
+    const response = {
+      contents: [
+        ordinary,
+        shorts,
+        {
+          richSectionRenderer: {
+            content: {
+              gridShelfViewModel: { contents: [{ shortsLockupViewModel: {} }] },
+            },
+          },
+        },
+      ],
+      onResponseReceivedActions: [
+        {
+          appendContinuationItemsAction: {
+            continuationItems: [
+              {
+                videoWithContextRenderer: {
+                  navigationEndpoint: {
+                    commandMetadata: {
+                      webCommandMetadata: { url: '/shorts/abc' },
+                    },
+                  },
+                },
+              },
+              ordinary,
+              compact,
+              grid,
+            ],
+          },
+        },
+      ],
+    }
     const hidden = JSON.parse(transformBrowseResponse(JSON.stringify(response), undefined, { hideShorts: true }))
     expect(hidden.contents).toEqual([ordinary])
     expect(hidden.onResponseReceivedActions[0].appendContinuationItemsAction.continuationItems).toEqual([ordinary])

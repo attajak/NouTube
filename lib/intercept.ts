@@ -72,11 +72,7 @@ export function transformSearchResponse(text: string, blocklist?: BlocklistSnaps
   return JSON.stringify(data)
 }
 
-export function transformBrowseResponse(
-  text: string,
-  blocklist?: BlocklistSnapshot,
-  options: TransformOptions = {},
-) {
+export function transformBrowseResponse(text: string, blocklist?: BlocklistSnapshot, options: TransformOptions = {}) {
   const data = JSON.parse(text)
   rewriteOriginalTitles(data, options)
   filterListResponse(data, blocklist, options)
@@ -95,7 +91,11 @@ export function transformReelResponse(text: string, blocklist?: BlocklistSnapsho
   return JSON.stringify(data)
 }
 
-function transformSectionListItem(item: SectionListItem, blocklist: BlocklistSnapshot | undefined, hideShorts: boolean) {
+function transformSectionListItem(
+  item: SectionListItem,
+  blocklist: BlocklistSnapshot | undefined,
+  hideShorts: boolean,
+) {
   if (hideShorts && isShortsItem(item)) {
     return undefined
   }
@@ -138,9 +138,15 @@ function isShortsItem(item: any): boolean {
     }
     if (card.richShelfRenderer?.isShorts) return true
     if (card.gridShelfViewModel?.contents?.some((child: any) => child.shortsLockupViewModel)) return true
-    const renderer = card.videoWithContextRenderer || card.videoRenderer || card.compactVideoRenderer ||
-      card.gridVideoRenderer || card.lockupViewModel
-    const endpoint = renderer?.navigationEndpoint || renderer?.onTap?.innertubeCommand ||
+    const renderer =
+      card.videoWithContextRenderer ||
+      card.videoRenderer ||
+      card.compactVideoRenderer ||
+      card.gridVideoRenderer ||
+      card.lockupViewModel
+    const endpoint =
+      renderer?.navigationEndpoint ||
+      renderer?.onTap?.innertubeCommand ||
       renderer?.rendererContext?.commandContext?.onTap?.innertubeCommand
     const url = endpoint?.commandMetadata?.webCommandMetadata?.url
     return Boolean(endpoint?.reelWatchEndpoint || (typeof url === 'string' && /^\/shorts(?:\/|\?|$)/.test(url)))
@@ -223,10 +229,7 @@ function rendererMatchesBlocklist(renderer: any, blocklist: BlocklistSnapshot) {
   const titleTexts = extractTitleTexts(renderer)
   const channelTexts = extractChannelTexts(renderer)
 
-  return (
-    blocklistTextsMatch(titleTexts, blocklist.keywords) ||
-    blocklistChannelsMatch(channelTexts, blocklist.channels)
-  )
+  return blocklistTextsMatch(titleTexts, blocklist.keywords) || blocklistChannelsMatch(channelTexts, blocklist.channels)
 }
 
 function extractTitleTexts(renderer: any): string[] {
@@ -272,11 +275,7 @@ function findBrowseEndpoints(
 
 function extractChannelTexts(renderer: any): string[] {
   const endpoints = findBrowseEndpoints(renderer)
-  const texts = [
-    ...endpoints.names,
-    ...endpoints.urls,
-    ...endpoints.ids,
-  ]
+  const texts = [...endpoints.names, ...endpoints.urls, ...endpoints.ids]
 
   if (texts.length === 0) {
     return [
@@ -374,18 +373,20 @@ function rewriteRendererTitle(renderer: any) {
 }
 
 function getOriginalTitle(renderer: any): string {
-  return [
-    renderer.originalTitle,
-    renderer.untranslatedTitle,
-    renderer.untranslatedVideoTitle,
-    renderer.title?.originalTitle,
-    renderer.title?.untranslatedTitle,
-    renderer.headline?.originalTitle,
-    renderer.metadata?.lockupMetadataViewModel?.originalTitle,
-    renderer.metadata?.lockupMetadataViewModel?.title?.originalTitle,
-  ]
-    .map(textFromNode)
-    .find(Boolean) || ''
+  return (
+    [
+      renderer.originalTitle,
+      renderer.untranslatedTitle,
+      renderer.untranslatedVideoTitle,
+      renderer.title?.originalTitle,
+      renderer.title?.untranslatedTitle,
+      renderer.headline?.originalTitle,
+      renderer.metadata?.lockupMetadataViewModel?.originalTitle,
+      renderer.metadata?.lockupMetadataViewModel?.title?.originalTitle,
+    ]
+      .map(textFromNode)
+      .find(Boolean) || ''
+  )
 }
 
 function setTextNode(node: any, text: string) {

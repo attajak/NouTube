@@ -66,7 +66,9 @@ export const BookmarkItem: React.FC<{ bookmark: Bookmark }> = memo(({ bookmark }
               ? [
                   {
                     label: t('menus.openInNewTab'),
-                    icon: <MaterialIcons name="open-in-new" size={18} color={isDark ? tw('zinc-300') : tw('slate-600')} />,
+                    icon: (
+                      <MaterialIcons name="open-in-new" size={18} color={isDark ? tw('zinc-300') : tw('slate-600')} />
+                    ),
                     handler: () => {
                       tabs$.openTab(bookmark.url)
                       ui$.assign({ libraryModalOpen: false })
@@ -82,7 +84,13 @@ export const BookmarkItem: React.FC<{ bookmark: Bookmark }> = memo(({ bookmark }
             },
             {
               label: t('menus.moveTo'),
-              icon: <MaterialIcons name="drive-file-move-outline" size={18} color={isDark ? tw('zinc-300') : tw('slate-600')} />,
+              icon: (
+                <MaterialIcons
+                  name="drive-file-move-outline"
+                  size={18}
+                  color={isDark ? tw('zinc-300') : tw('slate-600')}
+                />
+              ),
               systemImage: 'folder',
               handler: () => ui$.moveBookmarkModalBookmark.set(bookmark),
             },

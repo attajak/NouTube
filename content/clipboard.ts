@@ -3,7 +3,11 @@ import { removeTrackingParams } from '@/lib/tracking-url'
 function getCopiedText() {
   const active = document.activeElement
   if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
-    if (active.selectionStart !== null && active.selectionEnd !== null && active.selectionStart !== active.selectionEnd) {
+    if (
+      active.selectionStart !== null &&
+      active.selectionEnd !== null &&
+      active.selectionStart !== active.selectionEnd
+    ) {
       return active.value.slice(active.selectionStart, active.selectionEnd)
     }
     return active.value

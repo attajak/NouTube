@@ -16,7 +16,9 @@ export type FormatOption = {
 }
 
 type Asyncify<T> = {
-  [K in keyof T]: T[K] extends (...args: infer Args) => infer Result ? (...args: Args) => Promise<Awaited<Result>> : never
+  [K in keyof T]: T[K] extends (...args: infer Args) => infer Result
+    ? (...args: Args) => Promise<Awaited<Result>>
+    : never
 }
 
 export type MainClient = Asyncify<MainInterface>

@@ -35,7 +35,9 @@ export const QueueItem: React.FC<{ bookmark: Bookmark; playing: boolean; index: 
   return (
     <View className="flex-row my-2 overflow-hidden">
       <View className="flex-row items-center">
-        <View className="w-6">{nIf(playing, <MaterialIcons name="play-arrow" color={tw(colors.icon)} size={16} />)}</View>
+        <View className="w-6">
+          {nIf(playing, <MaterialIcons name="play-arrow" color={tw(colors.icon)} size={16} />)}
+        </View>
         <Pressable className="w-[120px]" onPress={onPress}>
           <RetryImage
             source={bookmark.thumbnail || getThumbnail(bookmark.url)}
@@ -69,15 +71,7 @@ export const QueueItem: React.FC<{ bookmark: Bookmark; playing: boolean; index: 
         />
       </View>
       <NouMenu
-        trigger={
-          isWeb ? (
-            <MaterialButton name="more-vert" size={20} />
-          ) : isIos ? (
-            'ellipsis'
-          ) : (
-            'filled.MoreVert'
-          )
-        }
+        trigger={isWeb ? <MaterialButton name="more-vert" size={20} /> : isIos ? 'ellipsis' : 'filled.MoreVert'}
         items={[
           {
             label: t('menus.share'),

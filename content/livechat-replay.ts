@@ -1,4 +1,11 @@
-import { ChatReplayBuffer, chatReplayImageUrl, chatReplayPollDelay, getChatReplay, shouldPrefetchChatReplay, type ReplayMessage } from '../lib/live-chat-replay'
+import {
+  ChatReplayBuffer,
+  chatReplayImageUrl,
+  chatReplayPollDelay,
+  getChatReplay,
+  shouldPrefetchChatReplay,
+  type ReplayMessage,
+} from '../lib/live-chat-replay'
 import { getYouTubeAuthorization } from '../lib/youtube-auth'
 
 async function request(path: string, data: object, signal: AbortSignal) {
@@ -7,9 +14,8 @@ async function request(path: string, data: object, signal: AbortSignal) {
   if (!context?.client) throw new Error('YouTube context is not ready')
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   // Secure SID cookies can outlive sign-out; do not authenticate a logged-out page.
-  const authorization = ytcfg.get('LOGGED_IN') === false
-    ? undefined
-    : await getYouTubeAuthorization(location.origin, document.cookie)
+  const authorization =
+    ytcfg.get('LOGGED_IN') === false ? undefined : await getYouTubeAuthorization(location.origin, document.cookie)
   if (authorization) {
     headers.Authorization = authorization
     headers['X-Goog-AuthUser'] = String(ytcfg.get('SESSION_INDEX') ?? 0)
@@ -23,12 +29,15 @@ async function request(path: string, data: object, signal: AbortSignal) {
     headers,
     signal,
     body: JSON.stringify({
-      context: { ...context, client: {
-        ...context.client,
-        clientName: 'WEB',
-        platform: 'DESKTOP',
-        clientFormFactor: 'UNKNOWN_FORM_FACTOR',
-      } },
+      context: {
+        ...context,
+        client: {
+          ...context.client,
+          clientName: 'WEB',
+          platform: 'DESKTOP',
+          clientFormFactor: 'UNKNOWN_FORM_FACTOR',
+        },
+      },
       ...data,
     }),
   })
@@ -134,9 +143,11 @@ export function mountChatReplay(container: Element, videoId: string, initialCont
     const atBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40
     const listTop = list.getBoundingClientRect().top
     // Hold a surviving visible row in place when older rows are evicted.
-    const anchor = atBottom ? undefined : Array.from(rows.entries()).find(([id, row]) =>
-      buffer.messages.has(id) && row.element.getBoundingClientRect().bottom > listTop,
-    )
+    const anchor = atBottom
+      ? undefined
+      : Array.from(rows.entries()).find(
+          ([id, row]) => buffer.messages.has(id) && row.element.getBoundingClientRect().bottom > listTop,
+        )
     const anchorTop = anchor?.[1].element.getBoundingClientRect().top
     for (const [id, row] of rows) {
       if (!buffer.messages.has(id)) {
@@ -192,20 +203,30 @@ export function mountChatReplay(container: Element, videoId: string, initialCont
     lastTime = time
     if (buffer.advance(time)) redraw()
     if (loading || failed || !continuation || performance.now() < nextRequestAt) return
-    if (hasLoaded && (player.getPlayerState?.() !== 1 ||
-      !shouldPrefetchChatReplay(time, buffer.bufferedUntil, rate, prefetchThresholdMsec))) return
+    if (
+      hasLoaded &&
+      (player.getPlayerState?.() !== 1 ||
+        !shouldPrefetchChatReplay(time, buffer.bufferedUntil, rate, prefetchThresholdMsec))
+    )
+      return
     loading = true
     const requestRevision = revision
     try {
-      const response = await request('live_chat/get_live_chat_replay', {
-        continuation,
-        currentPlayerState: { playerOffsetMs: String(Math.floor(time * 1000)) },
-      }, controller.signal)
+      const response = await request(
+        'live_chat/get_live_chat_replay',
+        {
+          continuation,
+          currentPlayerState: { playerOffsetMs: String(Math.floor(time * 1000)) },
+        },
+        controller.signal,
+      )
       if (stopped || requestRevision !== revision) return
       const chat = response?.continuationContents?.liveChatContinuation
       if (!chat) throw new Error('Chat replay is unavailable')
       buffer.append(chat.actions)
-      const next = chat.continuations?.find((item: any) => item.liveChatReplayContinuationData)?.liveChatReplayContinuationData
+      const next = chat.continuations?.find(
+        (item: any) => item.liveChatReplayContinuationData,
+      )?.liveChatReplayContinuationData
       const seek = chat.continuations?.find((item: any) => item.playerSeekContinuationData)?.playerSeekContinuationData
       continuation = next?.continuation || ''
       seekContinuation = seek?.continuation || initialContinuation
@@ -238,7 +259,9 @@ export function mountChatReplay(container: Element, videoId: string, initialCont
     void tick()
   }
   video?.addEventListener('seeked', onSeek)
-  const timer = setInterval(() => { void tick() }, 500)
+  const timer = setInterval(() => {
+    void tick()
+  }, 500)
   void tick()
   return () => {
     stopped = true

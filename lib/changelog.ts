@@ -14,10 +14,13 @@ function decodeEntities(input: string) {
     .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-  }
+}
 
 function stripTags(input: string) {
-  return input.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  return input
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function extractTag(input: string, tag: string) {

@@ -7,8 +7,12 @@ describe('split player window dimensions', () => {
       screen: { width: 393, height: 808 },
       innerWidth: 393,
       innerHeight: 710,
-      get outerWidth() { return this.innerWidth },
-      get outerHeight() { return this.innerHeight },
+      get outerWidth() {
+        return this.innerWidth
+      },
+      get outerHeight() {
+        return this.innerHeight
+      },
     }
     installSplitPlayerWindow(target as unknown as Window)
     target.innerWidth = 227

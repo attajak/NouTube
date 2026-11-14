@@ -22,7 +22,10 @@ const isHydrated = (observable$: Observable<any>) => syncState(observable$).isPe
  * Marks what changed here to be synced. The extension calls this once its stored state is in
  * place, as hydrating it would otherwise look like a local edit.
  */
-export function watchLocalSyncChanges(options: { requireHydrated: boolean; onUserStylesChange?: (value: UserStylesSnapshot) => void }) {
+export function watchLocalSyncChanges(options: {
+  requireHydrated: boolean
+  onUserStylesChange?: (value: UserStylesSnapshot) => void
+}) {
   const ready = (observable$: Observable<any>) => !options.requireHydrated || isHydrated(observable$)
 
   const subscriptions = [

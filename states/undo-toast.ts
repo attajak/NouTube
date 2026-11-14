@@ -23,7 +23,10 @@ export function showUndoToast(message: string, onUndo: () => void) {
   const id = `${Date.now()}-${Math.random()}`
   undoActions.set(id, onUndo)
   undoToasts$.push({ id, message, expiresAt: Date.now() + UNDO_TIMEOUT_MS })
-  dismissTimers.set(id, setTimeout(() => dismissUndoToast(id), UNDO_TIMEOUT_MS))
+  dismissTimers.set(
+    id,
+    setTimeout(() => dismissUndoToast(id), UNDO_TIMEOUT_MS),
+  )
 }
 
 export function dismissUndoToast(id = undoToasts$.get().at(-1)?.id) {

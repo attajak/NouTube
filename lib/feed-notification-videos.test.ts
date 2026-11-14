@@ -4,8 +4,12 @@ import { getFeedNotificationVideos, getLatestFeedPublishedAt } from './feed-noti
 
 function video(url: string, published: string): Bookmark {
   return {
-    id: url, url: url.startsWith('https:') ? url : `https://m.youtube.com/watch?v=${url}`, title: url, json: {},
-    created_at: new Date(published), updated_at: new Date(published),
+    id: url,
+    url: url.startsWith('https:') ? url : `https://m.youtube.com/watch?v=${url}`,
+    title: url,
+    json: {},
+    created_at: new Date(published),
+    updated_at: new Date(published),
   }
 }
 const old = video('old', '2026-10-01T00:00:00Z')

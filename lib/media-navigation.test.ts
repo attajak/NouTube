@@ -17,10 +17,20 @@ function browser(layout: string, ids: string[], playingId: string, selectedId = 
   const player = {
     getVideoData: () => ({ video_id: playingId }),
     getVideoUrl: () => `https://m.youtube.com/watch?v=${playingId}`,
-    getWatchNextResponse: () => ({ contents: { [layout]: { playlist: { playlist: {
-      playlistId: 'PL1',
-      contents: ids.map((videoId) => ({ playlistPanelVideoRenderer: { videoId, selected: videoId === selectedId } })),
-    } } } } }),
+    getWatchNextResponse: () => ({
+      contents: {
+        [layout]: {
+          playlist: {
+            playlist: {
+              playlistId: 'PL1',
+              contents: ids.map((videoId) => ({
+                playlistPanelVideoRenderer: { videoId, selected: videoId === selectedId },
+              })),
+            },
+          },
+        },
+      },
+    }),
     nextVideo: () => calls.push('next'),
     previousVideo: () => calls.push('previous'),
     seekTo: () => calls.push('seek'),
@@ -31,7 +41,14 @@ function browser(layout: string, ids: string[], playingId: string, selectedId = 
   const document = Object.assign(new EventTarget(), {
     location,
     getElementById: () => player,
-    createElement: () => ({ href: '', style: {}, click() { navigations.push(this.href) }, remove() {} }),
+    createElement: () => ({
+      href: '',
+      style: {},
+      click() {
+        navigations.push(this.href)
+      },
+      remove() {},
+    }),
     body: { appendChild() {} },
   })
   const window = Object.assign(new EventTarget(), {
@@ -44,7 +61,11 @@ function browser(layout: string, ids: string[], playingId: string, selectedId = 
 let initNouTube: typeof import('../content/noutube').initNouTube
 beforeAll(async () => {
   browser('singleColumnWatchNextResults', [], 'bbb')
-  try { ({ initNouTube } = await import('../content/noutube')) } finally { restore() }
+  try {
+    ;({ initNouTube } = await import('../content/noutube'))
+  } finally {
+    restore()
+  }
 })
 afterEach(restore)
 
@@ -63,7 +84,10 @@ describe('media navigation', () => {
       const controls = initNouTube()
       controls.skipToNext()
       controls.prev()
-      expect(page.navigations).toEqual(['https://m.youtube.com/watch?v=ccc&list=PL1', 'https://m.youtube.com/watch?v=aaa&list=PL1'])
+      expect(page.navigations).toEqual([
+        'https://m.youtube.com/watch?v=ccc&list=PL1',
+        'https://m.youtube.com/watch?v=aaa&list=PL1',
+      ])
       expect(page.calls).toEqual([])
     })
 

@@ -156,9 +156,13 @@ describe('user scripts', () => {
   })
 
   it('reads @run-at and defaults scripts to document-end', () => {
-    const source = ['// ==UserScript==', '// @name   Early', '// @run-at document-start', '// ==/UserScript==', 'x()'].join(
-      '\n',
-    )
+    const source = [
+      '// ==UserScript==',
+      '// @name   Early',
+      '// @run-at document-start',
+      '// ==/UserScript==',
+      'x()',
+    ].join('\n')
 
     expect(parseUserscriptMetadata(source).runAt).toBe('document-start')
 

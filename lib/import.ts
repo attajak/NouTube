@@ -7,11 +7,7 @@ import { normalizeUrl } from './url'
 import JSZip from 'jszip'
 import { folders$ } from '@/states/folders'
 
-async function getOg(
-  url: string,
-  type: string,
-  retries = 2,
-): Promise<{ thumbnail?: string; title?: string }> {
+async function getOg(url: string, type: string, retries = 2): Promise<{ thumbnail?: string; title?: string }> {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(url)
@@ -20,8 +16,9 @@ async function getOg(
       const $ = cheerio.load(html)
 
       const title = $('meta[property="og:title"]').attr('content')
-      const thumbnail = $('meta[property="og:image"]').attr('content') || $('meta[property="og:thumbnail"]').attr('content')
-      
+      const thumbnail =
+        $('meta[property="og:image"]').attr('content') || $('meta[property="og:thumbnail"]').attr('content')
+
       if (title || thumbnail) {
         return { title, thumbnail }
       }

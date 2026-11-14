@@ -95,7 +95,10 @@ export const FeedEditorSheet: React.FC<{
 
   // No useMemo: legend-state mutates the folders array in place, so its
   // reference stays stable and a memo would miss newly created folders.
-  const channelFolders = sortBy(folders.filter((x) => !x.json.deleted && x.json.tab === 'channel'), ['name'])
+  const channelFolders = sortBy(
+    folders.filter((x) => !x.json.deleted && x.json.tab === 'channel'),
+    ['name'],
+  )
   const currentFolder = channelFolders.find((x) => x.id === folderId)
 
   if (!bookmark) {
@@ -213,7 +216,10 @@ export const FeedEditorSheet: React.FC<{
 
   return (
     <View className="absolute inset-0 z-20" pointerEvents="box-none">
-      <Pressable className={clsx('absolute inset-0', isDesktop ? 'bg-black/80' : 'bg-gray-600/70')} onPress={isDesktop ? undefined : onClose} />
+      <Pressable
+        className={clsx('absolute inset-0', isDesktop ? 'bg-black/80' : 'bg-gray-600/70')}
+        onPress={isDesktop ? undefined : onClose}
+      />
       <KeyboardAvoidingView
         className={clsx('absolute inset-0', isNarrowNative ? 'justify-end' : 'items-center justify-center')}
         behavior={Platform.OS === 'ios' ? 'padding' : 'position'}

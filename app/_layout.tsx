@@ -20,7 +20,9 @@ function RootLayoutContent() {
   const feedNotificationsEnabled = useValue(settings$.feedNotificationsEnabled)
   useEffect(() => {
     const reconcile = () => {
-      void syncFeedNotificationTask().catch((error) => console.error('Feed background task registration failed:', error))
+      void syncFeedNotificationTask().catch((error) =>
+        console.error('Feed background task registration failed:', error),
+      )
     }
     reconcile()
     const subscription = AppState.addEventListener('change', (state) => {

@@ -117,7 +117,10 @@ export const TranslationCard = () => {
           ))}
         </ScrollView>,
       )}
-      {nIf(!result && Boolean(error), <NouText className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</NouText>)}
+      {nIf(
+        !result && Boolean(error),
+        <NouText className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</NouText>,
+      )}
       {nIf(!result && !error, <ActivityIndicator className="mt-5 mb-2" />)}
       {nIf(
         Boolean(result),

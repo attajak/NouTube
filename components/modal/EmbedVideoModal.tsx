@@ -12,12 +12,7 @@ export const EmbedVideoModal: React.FC<{
   scriptOnStart: string
   userScriptsOnStart?: string[]
   onClose: () => void
-}> = ({
-  videoId,
-  scriptOnStart,
-  userScriptsOnStart,
-  onClose,
-}) => {
+}> = ({ videoId, scriptOnStart, userScriptsOnStart, onClose }) => {
   const customUserAgent = useValue(settings$.userAgent)
   const userAgent = resolveUserAgent(
     isIos ? 'ios' : isWeb ? window.electron.process.platform : 'android',

@@ -1,9 +1,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'bun:test'
 
 const globalNames = ['window', 'document', 'location', 'history', 'MutationObserver'] as const
-const originalGlobals = new Map(globalNames.map((name) => [
-  name, Object.getOwnPropertyDescriptor(globalThis, name),
-]))
+const originalGlobals = new Map(globalNames.map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]))
 
 function restoreGlobals() {
   for (const name of globalNames) {
@@ -36,17 +34,32 @@ function browser(url: string, hasRoot = true) {
   const history = {
     pushState: navigate,
     replaceState: navigate,
-    back: () => { backCalls++ },
+    back: () => {
+      backCalls++
+    },
   }
   class MutationObserver {
-    observe() { observerConnected = true }
-    disconnect() { observerConnected = false }
+    observe() {
+      observerConnected = true
+    }
+    disconnect() {
+      observerConnected = false
+    }
   }
   Object.assign(globalThis, { window, document, location, history, MutationObserver })
   return {
-    window, document, location, history, media, messages,
-    get backCalls() { return backCalls },
-    get observerConnected() { return observerConnected },
+    window,
+    document,
+    location,
+    history,
+    media,
+    messages,
+    get backCalls() {
+      return backCalls
+    },
+    get observerConnected() {
+      return observerConnected
+    },
   }
 }
 
@@ -81,9 +94,7 @@ describe('player document warmup', () => {
 
     page.history.pushState(null, '', '/@channel')
     await settleNavigation()
-    expect(page.messages).toEqual([
-      { type: 'open-page', data: { url: 'https://m.youtube.com/@channel' } },
-    ])
+    expect(page.messages).toEqual([{ type: 'open-page', data: { url: 'https://m.youtube.com/@channel' } }])
     expect(page.backCalls).toBe(1)
   })
 
@@ -123,9 +134,7 @@ describe('player document warmup', () => {
 
     page.history.pushState(null, '', '/')
     await settleNavigation()
-    expect(page.messages).toEqual([
-      { type: 'open-page', data: { url: 'https://m.youtube.com/' } },
-    ])
+    expect(page.messages).toEqual([{ type: 'open-page', data: { url: 'https://m.youtube.com/' } }])
   })
 })
 
@@ -140,7 +149,14 @@ describe('navigateWatch', () => {
     const page = browser('https://m.youtube.com/')
     const clicked: string[] = []
     Object.assign(page.document, {
-      createElement: () => ({ style: {}, href: '', click() { clicked.push(this.href) }, remove() {} }),
+      createElement: () => ({
+        style: {},
+        href: '',
+        click() {
+          clicked.push(this.href)
+        },
+        remove() {},
+      }),
       body: { appendChild() {} },
     })
 

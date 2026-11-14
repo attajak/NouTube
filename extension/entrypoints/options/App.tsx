@@ -17,7 +17,9 @@ const Settings = () => {
     <>
       {nIf(
         error,
-        <NouText className="bg-red-100 px-4 py-2 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">{error}</NouText>,
+        <NouText className="bg-red-100 px-4 py-2 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
+          {error}
+        </NouText>,
       )}
       <View className="flex-1">
         <SettingsTree

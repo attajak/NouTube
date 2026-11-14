@@ -78,7 +78,25 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => {
       [
         'expo-localization',
         {
-          supportedLocales: ['en', 'de', 'es', 'fr', 'gl', 'id', 'it', 'ja', 'pl', 'pt', 'pt-BR', 'ru', 'tr', 'uk', 'vi', 'zh-Hans', 'zh-Hant'],
+          supportedLocales: [
+            'en',
+            'de',
+            'es',
+            'fr',
+            'gl',
+            'id',
+            'it',
+            'ja',
+            'pl',
+            'pt',
+            'pt-BR',
+            'ru',
+            'tr',
+            'uk',
+            'vi',
+            'zh-Hans',
+            'zh-Hant',
+          ],
         },
       ],
       [
@@ -99,9 +117,9 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => {
     experiments: {
       typedRoutes: true,
     },
-    'extra': {
-      'eas': {
-        'projectId': '90bcee38-cb5b-4644-b495-75e3894e5c0a',
+    extra: {
+      eas: {
+        projectId: '90bcee38-cb5b-4644-b495-75e3894e5c0a',
       },
     },
   }

@@ -42,7 +42,9 @@ export const MainPage: React.FC<{ contentJs: string }> = ({ contentJs }) => {
   const feedsEnabled = useValue(settings$.feedsEnabled)
   useEffect(() => {
     if (!feedsEnabled || !feedNotificationsEnabled) return
-    const refresh = () => { void feederLoop() }
+    const refresh = () => {
+      void feederLoop()
+    }
     refresh()
     const timer = setInterval(refresh, 2 * 3600 * 1000)
     const subscription = AppState.addEventListener('change', (state) => {

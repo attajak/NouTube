@@ -1,8 +1,5 @@
 import { preparePictureInPicture, setPictureInPicture, watchPictureInPictureVideo } from './picture-in-picture'
-import {
-  hideShorts,
-  showShorts,
-} from './css'
+import { hideShorts, showShorts } from './css'
 import { playDefaultAudio, restoreLastPlaying } from './player'
 import { getPlayerFormats } from './player-formats'
 import { navigateWatch } from './split-view'
@@ -166,7 +163,9 @@ let passNextClick = false
 // apart by coming last.
 function getNextButton(target: EventTarget | null): HTMLElement | undefined {
   const button = (target as HTMLElement | null)?.closest?.<HTMLElement>('.player-middle-controls-prev-next-button')
-  const buttons = button?.closest('.player-controls-middle')?.querySelectorAll('.player-middle-controls-prev-next-button')
+  const buttons = button
+    ?.closest('.player-controls-middle')
+    ?.querySelectorAll('.player-middle-controls-prev-next-button')
   if (button && buttons && buttons.length > 1 && buttons[buttons.length - 1] == button) return button
 }
 

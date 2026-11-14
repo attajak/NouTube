@@ -209,9 +209,7 @@ export const ToolsModal = () => {
               value={useCookies}
               onPress={() => settings$.downloadUseCookies.set(!settings$.downloadUseCookies.peek())}
             />
-            <NouText className="text-xs text-zinc-500 dark:text-zinc-400">
-              {t('modals.downloadUseCookiesHint')}
-            </NouText>
+            <NouText className="text-xs text-zinc-500 dark:text-zinc-400">{t('modals.downloadUseCookiesHint')}</NouText>
           </View>,
         )}
 
@@ -400,7 +398,15 @@ export const ToolsModal = () => {
                       <MaterialIcons
                         name="push-pin"
                         size={20}
-                        color={isPinned ? (isDark ? tw('indigo-400') : tw('indigo-600')) : isDark ? tw('zinc-500') : tw('zinc-400')}
+                        color={
+                          isPinned
+                            ? isDark
+                              ? tw('indigo-400')
+                              : tw('indigo-600')
+                            : isDark
+                              ? tw('zinc-500')
+                              : tw('zinc-400')
+                        }
                       />
                     </Pressable>
                     <Pressable
@@ -444,7 +450,6 @@ export const ToolsModal = () => {
             </NouText>
           </View>
         )}
-
       </ScrollView>
     </BaseModal>
   )

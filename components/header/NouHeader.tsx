@@ -312,9 +312,18 @@ export const NouHeader: React.FC<{ getNoutube: () => any }> = ({ getNoutube }) =
             !isYTMusic && feedsEnabled,
             <MaterialButton color={headerControlColor} name="rss-feed" onPress={() => ui$.feedModalOpen.set(true)} />,
           )}
-          {nIf(!isWeb && showBackButtonInHeader, <MaterialButton color={headerControlColor} name="arrow-back" onPress={goBack} />)}
-          {nIf(!isWeb && showForwardButtonInHeader, <MaterialButton color={headerControlColor} name="arrow-forward" onPress={goForward} />)}
-          {nIf(!isWeb && showReloadButtonInHeader, <MaterialButton color={headerControlColor} name="refresh" onPress={reloadPage} />)}
+          {nIf(
+            !isWeb && showBackButtonInHeader,
+            <MaterialButton color={headerControlColor} name="arrow-back" onPress={goBack} />,
+          )}
+          {nIf(
+            !isWeb && showForwardButtonInHeader,
+            <MaterialButton color={headerControlColor} name="arrow-forward" onPress={goForward} />,
+          )}
+          {nIf(
+            !isWeb && showReloadButtonInHeader,
+            <MaterialButton color={headerControlColor} name="refresh" onPress={reloadPage} />,
+          )}
           {nIf(showHomeButtonInHeader, <MaterialButton color={headerControlColor} name="home" onPress={onOpenHome} />)}
           {nIf(
             showHistoryButtonInHeader,
@@ -336,7 +345,10 @@ export const NouHeader: React.FC<{ getNoutube: () => any }> = ({ getNoutube }) =
                 disabled={!canGoForward}
                 onPress={goForward}
               />
-              {nIf(showReloadButtonInHeader, <MaterialButton color={headerControlColor} name="refresh" onPress={reloadPage} />)}
+              {nIf(
+                showReloadButtonInHeader,
+                <MaterialButton color={headerControlColor} name="refresh" onPress={reloadPage} />,
+              )}
             </>,
           )}
         </ScrollView>
@@ -374,35 +386,33 @@ export const NouHeader: React.FC<{ getNoutube: () => any }> = ({ getNoutube }) =
                       : []),
                   ]}
                 >
-                <div className="group relative shrink-0" title={getTabLabel(tab)}>
-                  <Pressable
-                    onPress={() => tabs$.setActiveTabIndex(index)}
-                    className={clsx(
-                      'h-9 w-9 items-center justify-center rounded-lg',
-                      active
-                        ? 'bg-white shadow-sm dark:bg-zinc-700'
-                        : 'hover:bg-zinc-200 dark:hover:bg-zinc-700/60',
-                    )}
-                  >
-                    {tab.isLoading ? (
-                      <ActivityIndicator size="small" color={headerControlColor} />
-                    ) : (
-                      <TabFavicon tab={tab} color={headerControlColor} />
-                    )}
-                  </Pressable>
-                  {tabs.length > 1 && (
-                    <div
-                      title={t('menus.close', 'Close')}
-                      className="absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-zinc-300 group-hover:flex dark:bg-zinc-600"
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        tabs$.closeTab(index)
-                      }}
+                  <div className="group relative shrink-0" title={getTabLabel(tab)}>
+                    <Pressable
+                      onPress={() => tabs$.setActiveTabIndex(index)}
+                      className={clsx(
+                        'h-9 w-9 items-center justify-center rounded-lg',
+                        active ? 'bg-white shadow-sm dark:bg-zinc-700' : 'hover:bg-zinc-200 dark:hover:bg-zinc-700/60',
+                      )}
                     >
-                      <MaterialIcons name="close" size={10} color={headerControlColor} />
-                    </div>
-                  )}
-                </div>
+                      {tab.isLoading ? (
+                        <ActivityIndicator size="small" color={headerControlColor} />
+                      ) : (
+                        <TabFavicon tab={tab} color={headerControlColor} />
+                      )}
+                    </Pressable>
+                    {tabs.length > 1 && (
+                      <div
+                        title={t('menus.close', 'Close')}
+                        className="absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-zinc-300 group-hover:flex dark:bg-zinc-600"
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          tabs$.closeTab(index)
+                        }}
+                      >
+                        <MaterialIcons name="close" size={10} color={headerControlColor} />
+                      </div>
+                    )}
+                  </div>
                 </TabContextMenu>
               )
             })}
@@ -519,12 +529,24 @@ export const NouHeader: React.FC<{ getNoutube: () => any }> = ({ getNoutube }) =
         )}
         <NouMenu
           trigger={
-            isWeb ? <MaterialButton color={headerControlColor} name="more-vert" /> : isIos ? 'ellipsis' : 'filled.MoreVert'
+            isWeb ? (
+              <MaterialButton color={headerControlColor} name="more-vert" />
+            ) : isIos ? (
+              'ellipsis'
+            ) : (
+              'filled.MoreVert'
+            )
           }
           items={[
             {
               label: isYTMusic ? 'YouTube' : 'YouTube Music',
-              icon: <MaterialIcons name={isYTMusic ? 'video-library' : 'library-music'} size={18} color={headerControlColor} />,
+              icon: (
+                <MaterialIcons
+                  name={isYTMusic ? 'video-library' : 'library-music'}
+                  size={18}
+                  color={headerControlColor}
+                />
+              ),
               systemImage: isYTMusic ? 'play.rectangle.stack' : 'music.note.house',
               handler: onToggleHome,
             },
@@ -581,10 +603,7 @@ export const NouHeader: React.FC<{ getNoutube: () => any }> = ({ getNoutube }) =
                         )}
                       >
                         <NouText
-                          className={clsx(
-                            'text-[11px] font-medium',
-                            desktopMode ? 'text-indigo-200' : 'text-zinc-400',
-                          )}
+                          className={clsx('text-[11px] font-medium', desktopMode ? 'text-indigo-200' : 'text-zinc-400')}
                         >
                           {desktopMode ? t('menus.on') : t('menus.off')}
                         </NouText>

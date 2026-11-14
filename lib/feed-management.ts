@@ -135,7 +135,7 @@ export function filterFeedManagementItems({
     }
 
     if (filter.kind === 'channel' && item.channel.id !== filter.id) {
-        return false
+      return false
     }
 
     if (!normalizedSearch) {

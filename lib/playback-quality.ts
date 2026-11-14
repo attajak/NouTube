@@ -10,7 +10,7 @@ export const playbackQualities = [
   { value: 'tiny', label: '144p' },
 ] as const
 
-export type PlaybackQualityValue = typeof playbackQualities[number]['value']
+export type PlaybackQualityValue = (typeof playbackQualities)[number]['value']
 
 export function formatPlaybackQuality(value: string) {
   const quality = playbackQualities.find((q) => q.value === value)

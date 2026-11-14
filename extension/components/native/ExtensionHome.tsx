@@ -81,17 +81,8 @@ const ExtensionHeader: React.FC<{
 
   return (
     <View className="z-10 flex-row items-center border-b border-zinc-300 bg-zinc-100 px-2 py-1 dark:border-zinc-800 dark:bg-zinc-900">
-      <ToolButton
-        name="video-library"
-        label={t('extension.library')}
-        onPress={() => ui$.libraryModalOpen.set(true)}
-      />
-      <ToolButton
-        name="rss-feed"
-        label={t('extension.feeds')}
-        selected
-        onPress={() => undefined}
-      />
+      <ToolButton name="video-library" label={t('extension.library')} onPress={() => ui$.libraryModalOpen.set(true)} />
+      <ToolButton name="rss-feed" label={t('extension.feeds')} selected onPress={() => undefined} />
       <View className="flex-1" />
       {nIf(busy, <ActivityIndicator className="mr-1" size="small" />)}
       {nIf(
@@ -233,7 +224,9 @@ const ExtensionContent: React.FC<{ showOpenExpanded: boolean }> = ({ showOpenExp
       />
       {nIf(
         error,
-        <NouText className="bg-red-100 px-4 py-2 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">{error}</NouText>,
+        <NouText className="bg-red-100 px-4 py-2 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
+          {error}
+        </NouText>,
       )}
       <FeedContent maxContentWidth={960} />
 

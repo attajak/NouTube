@@ -6,21 +6,31 @@ import { cloneElement, Fragment, isValidElement, ReactNode } from 'react'
 import { useColorScheme } from 'react-native'
 import { useTwColor } from '@/lib/theme'
 
-export const NouMenu: React.FC<{ trigger: ReactNode; items: Item[]; triggerColor?: string; side?: 'top' | 'right' | 'bottom' | 'left' }> = ({ trigger, items, triggerColor }) => {
+export const NouMenu: React.FC<{
+  trigger: ReactNode
+  items: Item[]
+  triggerColor?: string
+  side?: 'top' | 'right' | 'bottom' | 'left'
+}> = ({ trigger, items, triggerColor }) => {
   const tw = useTwColor()
   const colorScheme = useColorScheme()
   const isDark = colorScheme !== 'light'
   const resolvedTriggerColor = triggerColor ?? (isDark ? tw(colors.icon) : tw(colors.iconLight))
-  const groups = items.reduce<Item[][]>((acc, item) => {
-    if (item.kind === 'separator') {
-      acc.push([])
-      return acc
-    }
+  const groups = items
+    .reduce<Item[][]>(
+      (acc, item) => {
+        if (item.kind === 'separator') {
+          acc.push([])
+          return acc
+        }
 
-    const current = acc[acc.length - 1]
-    current.push(item)
-    return acc
-  }, [[]]).filter((group) => group.length)
+        const current = acc[acc.length - 1]
+        current.push(item)
+        return acc
+      },
+      [[]],
+    )
+    .filter((group) => group.length)
 
   const menuItems = groups.map((group, groupIndex) => {
     const header = group.find((item) => item.kind === 'label')

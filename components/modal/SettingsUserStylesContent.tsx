@@ -23,8 +23,7 @@ import { NouButton } from '../button/NouButton'
 import { MaterialButton } from '../button/IconButtons'
 import { useTwColor } from '@/lib/theme'
 
-const surfaceCls =
-  'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
+const surfaceCls = 'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
 const subheaderCls = 'mb-3 text-xs uppercase tracking-[0.18em] text-zinc-600 dark:text-gray-500'
 const rowCls = 'px-4 py-4'
 const rowBorderCls = 'border-b-2 border-zinc-100 dark:border-zinc-950'
@@ -34,7 +33,8 @@ const textInputCls =
 // single compact name row, so the code area keeps the rest of the screen.
 const nameInputCls =
   'rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 px-4 py-3 text-zinc-900 dark:text-white'
-const editorLabelCls = 'mb-2 mt-4 px-1 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-500'
+const editorLabelCls =
+  'mb-2 mt-4 px-1 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-500'
 
 const switchProps = Platform.select({
   ios: { style: { transform: [{ scale: 0.8 }] } },
@@ -53,7 +53,11 @@ const ToggleRow: React.FC<{
   const tw = useTwColor()
   return (
     <View
-      className={clsx('flex-row items-center justify-between px-4 py-3', !isLast && rowBorderCls, disabled && 'opacity-50')}
+      className={clsx(
+        'flex-row items-center justify-between px-4 py-3',
+        !isLast && rowBorderCls,
+        disabled && 'opacity-50',
+      )}
     >
       <View className="flex-1 pr-4">
         <NouText className="font-medium">{title}</NouText>
@@ -158,7 +162,9 @@ async function readPickedScript() {
 export const SettingsUserStylesContent = () => {
   const tw = useTwColor()
   const customStyles = useValue(userStyles$.customStyles)
-  const customScripts = useValue(userStyles$.customScripts).filter((script): script is CustomUserScript => Boolean(script))
+  const customScripts = useValue(userStyles$.customScripts).filter((script): script is CustomUserScript =>
+    Boolean(script),
+  )
   const [draft, setDraft] = useState<DraftState | null>(null)
   const [scriptDraft, setScriptDraft] = useState<ScriptDraftState | null>(null)
   // While the code editor has focus the name and toggles are just chrome in the
@@ -346,7 +352,9 @@ export const SettingsUserStylesContent = () => {
                 className="flex-row items-center gap-1 rounded-full bg-indigo-600/10 px-3 py-1.5 active:bg-indigo-600/20"
               >
                 <MaterialIcons name="add" color={tw('indigo-400')} size={18} />
-                <NouText className="text-xs font-semibold text-indigo-400">{t('settings.userStyles.scripts.add')}</NouText>
+                <NouText className="text-xs font-semibold text-indigo-400">
+                  {t('settings.userStyles.scripts.add')}
+                </NouText>
               </Pressable>
             </View>
             <View className={surfaceCls}>
@@ -585,7 +593,9 @@ export const SettingsUserStylesContent = () => {
                   <MaterialIcons name="code" color={tw('indigo-400')} size={20} />
                 </View>
                 <NouText className="text-xl font-bold tracking-tight">
-                  {scriptDraft.id ? t('settings.userStyles.scripts.editTitle') : t('settings.userStyles.scripts.addTitle')}
+                  {scriptDraft.id
+                    ? t('settings.userStyles.scripts.editTitle')
+                    : t('settings.userStyles.scripts.addTitle')}
                 </NouText>
               </View>
 
@@ -609,7 +619,9 @@ export const SettingsUserStylesContent = () => {
                   title={t('settings.userStyles.scripts.pinToHeader')}
                   hint={t('settings.userStyles.scripts.pinToHeaderHint')}
                   value={scriptDraft.pinToHeader}
-                  onValueChange={(pinToHeader) => setScriptDraft((value) => (value ? { ...value, pinToHeader } : value))}
+                  onValueChange={(pinToHeader) =>
+                    setScriptDraft((value) => (value ? { ...value, pinToHeader } : value))
+                  }
                 />
                 <ToggleRow
                   title={t('settings.userStyles.scripts.runAtStart')}
@@ -617,7 +629,9 @@ export const SettingsUserStylesContent = () => {
                   // there is no earlier slot to offer yet.
                   hint={t('settings.userStyles.scripts.runAtStartDesktopHint')}
                   value={scriptDraft.runAt === 'document-start'}
-                  onValueChange={(early) => setScriptDraft((value) => (value ? { ...value, runAt: runAtOf(early) } : value))}
+                  onValueChange={(early) =>
+                    setScriptDraft((value) => (value ? { ...value, runAt: runAtOf(early) } : value))
+                  }
                   disabled
                   isLast
                 />
@@ -696,7 +710,9 @@ export const SettingsUserStylesContent = () => {
           </View>
         ) : (
           <BaseFullScreenModal
-            title={scriptDraft.id ? t('settings.userStyles.scripts.editTitle') : t('settings.userStyles.scripts.addTitle')}
+            title={
+              scriptDraft.id ? t('settings.userStyles.scripts.editTitle') : t('settings.userStyles.scripts.addTitle')
+            }
             icon="code"
             onClose={closeScriptDraft}
             actions={

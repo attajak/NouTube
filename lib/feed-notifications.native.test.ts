@@ -18,26 +18,34 @@ let granted = true
 let available = true
 let responseListener: (response: any) => void
 const schedule = mock(async (_notification: any) => 'notification-id')
-const register = mock(async (_name: string, _options: any) => { registered = true })
-const unregister = mock(async (_name: string) => { registered = false })
+const register = mock(async (_name: string, _options: any) => {
+  registered = true
+})
+const unregister = mock(async (_name: string) => {
+  registered = false
+})
 const requestPermissions = mock(async () => ({ granted }))
 const removeListener = mock(() => {})
 
 mock.module('expo-task-manager', () => ({
-  defineTask: (_name: string, callback: typeof task) => { task = callback },
+  defineTask: (_name: string, callback: typeof task) => {
+    task = callback
+  },
   isTaskRegisteredAsync: async () => registered,
 }))
 mock.module('expo-background-task', () => ({
   BackgroundTaskStatus: { Available: 2, Restricted: 1 },
   BackgroundTaskResult: { Success: 1, Failed: 2 },
-  getStatusAsync: async () => available ? 2 : 1,
+  getStatusAsync: async () => (available ? 2 : 1),
   registerTaskAsync: register,
   unregisterTaskAsync: unregister,
 }))
 mock.module('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3 },
   DEFAULT_ACTION_IDENTIFIER: 'default',
-  setNotificationHandler: (handler: typeof notificationHandler) => { notificationHandler = handler },
+  setNotificationHandler: (handler: typeof notificationHandler) => {
+    notificationHandler = handler
+  },
   setNotificationChannelAsync: async () => {},
   requestPermissionsAsync: requestPermissions,
   getPermissionsAsync: async () => ({ granted }),
@@ -203,7 +211,10 @@ describe('mobile feed notifications', () => {
     await setFeedNotificationsEnabled(true)
     available = false
     Object.assign(AppState, { currentState: 'active' })
-    await notifyFeedVideos([{ channel: 'A', count: 2 }, { channel: 'B', count: 3 }])
+    await notifyFeedVideos([
+      { channel: 'A', count: 2 },
+      { channel: 'B', count: 3 },
+    ])
     expect(toasts$[0].message.get()).toBe('5 new videos from 2 channels')
     expect(schedule).not.toHaveBeenCalled()
   })
@@ -224,7 +235,10 @@ describe('mobile feed notifications', () => {
 
   it('collapses multiple channels into a single summary notification', async () => {
     await setFeedNotificationsEnabled(true)
-    await notifyFeedVideos([{ channel: 'A', count: 2 }, { channel: 'B', count: 3 }])
+    await notifyFeedVideos([
+      { channel: 'A', count: 2 },
+      { channel: 'B', count: 3 },
+    ])
     expect(schedule).toHaveBeenCalledTimes(1)
     expect(schedule.mock.calls[0][0].content.body).toBe('5 new videos from 2 channels')
   })

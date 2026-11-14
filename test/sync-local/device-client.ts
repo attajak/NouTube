@@ -10,11 +10,15 @@ export class Device {
     const device = new Device()
     let ready!: () => void
     let failed!: (error: Error) => void
-    const started = new Promise<void>((resolve, reject) => { ready = resolve; failed = reject })
+    const started = new Promise<void>((resolve, reject) => {
+      ready = resolve
+      failed = reject
+    })
     device.child = Bun.spawn([process.execPath, new URL('./device.ts', import.meta.url).pathname], {
       cwd: new URL('../..', import.meta.url).pathname,
       env: { ...process.env, NOUTUBE_SYNC_EMAIL: email, NOUTUBE_SYNC_PASSWORD: password },
-      stdout: 'inherit', stderr: 'inherit',
+      stdout: 'inherit',
+      stderr: 'inherit',
       ipc(message: { ready?: boolean; id: number; value?: unknown; error?: string }) {
         if (message.ready) return ready()
         const pending = device.pending.get(message.id)
@@ -31,7 +35,11 @@ export class Device {
     })
     // Ensure a failed startup cannot leave a process running after a hook times out.
     const timeout = setTimeout(() => device.child.kill(), 20_000)
-    try { await started } finally { clearTimeout(timeout) }
+    try {
+      await started
+    } finally {
+      clearTimeout(timeout)
+    }
     return device
   }
 
@@ -43,7 +51,14 @@ export class Device {
     })
   }
 
-  snapshot() { return this.command({ op: 'snapshot' }) as Promise<Snapshot> }
-  sync(scope?: Extract<Command, { op: 'sync' }>['scope']) { return this.command({ op: 'sync', scope }) }
-  async close() { this.child.kill(); await this.child.exited }
+  snapshot() {
+    return this.command({ op: 'snapshot' }) as Promise<Snapshot>
+  }
+  sync(scope?: Extract<Command, { op: 'sync' }>['scope']) {
+    return this.command({ op: 'sync', scope })
+  }
+  async close() {
+    this.child.kill()
+    await this.child.exited
+  }
 }

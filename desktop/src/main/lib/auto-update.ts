@@ -8,9 +8,7 @@ import { uiClient } from 'main/ipc/ui'
 export const isUpdateSupported = import.meta.env.VITE_BUILD_TARGET != 'portable' && process.env.SNAP === undefined
 
 export type UpdateCheckResult =
-  | { status: 'not-available' }
-  | { status: 'available'; version: string }
-  | { status: 'error'; message: string }
+  { status: 'not-available' } | { status: 'available'; version: string } | { status: 'error'; message: string }
 
 function getAutoUpdater(): AppUpdater {
   // Using destructuring to access autoUpdater due to the CommonJS module of 'electron-updater'.

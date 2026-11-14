@@ -10,13 +10,22 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
     payload: any
     onreadystatechange?: () => void
     args: any[] = []
-    get response() { return this.responseType === 'json' ? this.payload : JSON.stringify(this.payload) }
+    get response() {
+      return this.responseType === 'json' ? this.payload : JSON.stringify(this.payload)
+    }
     get responseText() {
       if (this.responseType === 'json') throw new Error('InvalidStateError')
       return JSON.stringify(this.payload)
     }
-    open(...args: any[]) { this.args = args; this.readyState = 1 }
-    complete(payload: any) { this.payload = payload; this.readyState = 4; this.onreadystatechange?.() }
+    open(...args: any[]) {
+      this.args = args
+      this.readyState = 1
+    }
+    complete(payload: any) {
+      this.payload = payload
+      this.readyState = 4
+      this.onreadystatechange?.()
+    }
   }
   const globals = ['window', 'location', 'XMLHttpRequest'] as const
   const saved = globals.map((key) => Object.getOwnPropertyDescriptor(globalThis, key))
@@ -34,7 +43,9 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
     expect(win.ytInitialData.contents).toEqual([])
     const xhr = new FakeXHR()
     let observed: any
-    xhr.onreadystatechange = () => { observed = xhr.response }
+    xhr.onreadystatechange = () => {
+      observed = xhr.response
+    }
     xhr.open('POST', '/youtubei/v1/player', false, 'user', 'password')
     expect(xhr.args).toEqual(['POST', '/youtubei/v1/player', false, 'user', 'password'])
     xhr.complete({ adPlacements: [{}], videoDetails: { videoId: 'first' } })

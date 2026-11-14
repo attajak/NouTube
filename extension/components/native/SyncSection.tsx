@@ -46,7 +46,11 @@ export const SyncSection = () => {
 
           {nIf(
             !signedIn,
-            <NouButton className="self-start" loading={busy} onPress={() => void run(() => request({ type: 'sign-in' }))}>
+            <NouButton
+              className="self-start"
+              loading={busy}
+              onPress={() => void run(() => request({ type: 'sign-in' }))}
+            >
               {t('extension.signIn')}
             </NouButton>,
           )}
@@ -66,8 +70,12 @@ export const SyncSection = () => {
           {nIf(
             signedIn && snapshot?.accountChoice,
             <View className="gap-3">
-              <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">{t('sync.accountChoiceMessage')}</NouText>
-              <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">{t('sync.accountChoiceHint')}</NouText>
+              <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                {t('sync.accountChoiceMessage')}
+              </NouText>
+              <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                {t('sync.accountChoiceHint')}
+              </NouText>
               <View className="flex-row flex-wrap gap-3">
                 <NouButton
                   loading={busy}

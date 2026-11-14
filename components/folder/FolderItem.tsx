@@ -32,15 +32,7 @@ export const FolderItem: React.FC<{ folder: Folder; readOnly?: boolean; onPress:
         !readOnly,
         <View>
           <NouMenu
-            trigger={
-              isWeb ? (
-                <MaterialButton name="more-vert" size={20} />
-              ) : isIos ? (
-                'ellipsis'
-              ) : (
-                'filled.MoreVert'
-              )
-            }
+            trigger={isWeb ? <MaterialButton name="more-vert" size={20} /> : isIos ? 'ellipsis' : 'filled.MoreVert'}
             items={[
               {
                 label: t('menus.edit'),
@@ -50,7 +42,9 @@ export const FolderItem: React.FC<{ folder: Folder; readOnly?: boolean; onPress:
               },
               {
                 label: t('menus.remove'),
-                icon: <MaterialIcons name="delete-outline" size={18} color={isDark ? tw('zinc-300') : tw('slate-600')} />,
+                icon: (
+                  <MaterialIcons name="delete-outline" size={18} color={isDark ? tw('zinc-300') : tw('slate-600')} />
+                ),
                 systemImage: 'trash',
                 handler: () => removeFolder(folder),
               },

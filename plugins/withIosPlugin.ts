@@ -1,8 +1,4 @@
-import {
-  ConfigPlugin,
-  withEntitlementsPlist,
-  withPodfile,
-} from '@expo/config-plugins'
+import { ConfigPlugin, withEntitlementsPlist, withPodfile } from '@expo/config-plugins'
 
 // Xcode 27 rejects deployment targets below 15.0, but some pods still declare
 // older ones (RNCAsyncStorage 13.4, RNSVG 12.4), which fails the archive.
@@ -45,7 +41,6 @@ const withoutPushEntitlement: ConfigPlugin = (config) =>
     return config
   })
 
-const withIosPlugin: ConfigPlugin = (config) =>
-  withoutPushEntitlement(withPodDeploymentTarget(config))
+const withIosPlugin: ConfigPlugin = (config) => withoutPushEntitlement(withPodDeploymentTarget(config))
 
 export default withIosPlugin

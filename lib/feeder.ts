@@ -6,7 +6,11 @@ import { mainClient } from './main-client'
 import { feeds$ } from '@/states/feeds'
 import { settings$ } from '@/states/settings'
 import { fetchYouTubeChannelMetadata } from './youtube-channel'
-import { getFeedNotificationVideos, getLatestFeedPublishedAt, type FeedNotificationUpdate } from './feed-notification-videos'
+import {
+  getFeedNotificationVideos,
+  getLatestFeedPublishedAt,
+  type FeedNotificationUpdate,
+} from './feed-notification-videos'
 import { notifyFeedVideos } from './feed-notifications'
 import { extractCommunityPosts, getChannelPostsUrl } from './feed-posts'
 
@@ -168,7 +172,11 @@ function getDuplicateChannelIds(channels: Bookmark[]) {
     counts.set(channel.json.id, (counts.get(channel.json.id) || 0) + 1)
   }
 
-  return new Set(Array.from(counts.entries()).filter(([, count]) => count > 1).map(([id]) => id))
+  return new Set(
+    Array.from(counts.entries())
+      .filter(([, count]) => count > 1)
+      .map(([id]) => id),
+  )
 }
 
 const parser = new XMLParser({
@@ -244,7 +252,12 @@ async function fetchChannel(
         },
       }),
     )
-    const newVideos = getFeedNotificationVideos(bookmarks, feed.latestPublishedAt, feeds$.urls(), settings$.hideShorts.get())
+    const newVideos = getFeedNotificationVideos(
+      bookmarks,
+      feed.latestPublishedAt,
+      feeds$.urls(),
+      settings$.hideShorts.get(),
+    )
     feeds$.importBookmarks(bookmarks)
     feeds$.saveFeed({
       ...feed,

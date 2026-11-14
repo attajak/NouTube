@@ -17,12 +17,10 @@ const cssContentMobile = css`
    * (ytp-hide-fullscreen-title), and forcing height:auto on #movie_player
    * collapses it to 0, clipping the video away.
    */
-  :is(
-      [class*='headline' i],
-      [class*='title' i],
-      [class*='subhead' i],
-      [class*='channel-name' i]
-    ):not(#movie_player, #movie_player *) {
+  :is([class*='headline' i], [class*='title' i], [class*='subhead' i], [class*='channel-name' i]):not(
+    #movie_player,
+    #movie_player *
+  ) {
     height: auto !important;
     max-height: none !important;
   }
@@ -123,9 +121,7 @@ const cssContentMobile = css`
     margin-right: 140px;
   }
 
-  #player-container-id:fullscreen
-    #player-control-overlay:has(player-fullscreen-top-controls)
-    #_nou_fullscreen_title {
+  #player-container-id:fullscreen #player-control-overlay:has(player-fullscreen-top-controls) #_nou_fullscreen_title {
     display: none;
   }
 
@@ -143,9 +139,7 @@ const cssContentMobile = css`
     display: none;
   }
 
-  #player-container-id:fullscreen:has(#player-control-overlay.fadein):not(
-      :has(#_nou_lock_overlay, #_nou_fs_panel)
-    )
+  #player-container-id:fullscreen:has(#player-control-overlay.fadein):not(:has(#_nou_lock_overlay, #_nou_fs_panel))
     > #_nou_fs_btn {
     display: flex;
     position: fixed;
@@ -165,9 +159,7 @@ const cssContentMobile = css`
   }
 
   /* Same chain as above so it outweighs the left-edge rule. */
-  #player-container-id:fullscreen:has(#player-control-overlay.fadein):not(
-      :has(#_nou_lock_overlay, #_nou_fs_panel)
-    )
+  #player-container-id:fullscreen:has(#player-control-overlay.fadein):not(:has(#_nou_lock_overlay, #_nou_fs_panel))
     > #_nou_fs_btn.right {
     left: auto;
     right: calc(16px + var(--_nou_cutout_right, 0px));
@@ -349,11 +341,7 @@ const cssFullscreenPanel = css`
   #_nou_fs_panel ._nou_fs_slider::-webkit-slider-runnable-track {
     height: 4px;
     border-radius: 2px;
-    background: linear-gradient(
-      to right,
-      #4f46e5 var(--_nou_fill, 0%),
-      rgba(255, 255, 255, 0.3) var(--_nou_fill, 0%)
-    );
+    background: linear-gradient(to right, #4f46e5 var(--_nou_fill, 0%), rgba(255, 255, 255, 0.3) var(--_nou_fill, 0%));
   }
 
   #_nou_fs_panel ._nou_fs_slider::-webkit-slider-thumb {
@@ -675,10 +663,7 @@ export const getCoreCss = () => {
   const isApp = Boolean(window.NouTubeI)
   const blockAds = window.NouTube?.getSettings?.()?.blockAds !== false
   return (
-    (blockAds ? cssContentAds : '') +
-    cssContent +
-    (isApp ? cssContentMobile : cssContentDesktop) +
-    cssFullscreenPanel
+    (blockAds ? cssContentAds : '') + cssContent + (isApp ? cssContentMobile : cssContentDesktop) + cssFullscreenPanel
   )
 }
 

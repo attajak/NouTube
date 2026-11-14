@@ -111,7 +111,10 @@ export function useProjection(snapshot: AppSnapshot | undefined, onError: (messa
             case 'folders':
               await request({
                 type: 'set-folders',
-                folders: { items: folders$.folders.get(), updatedAt: reviveDate(folders$.updatedAt.get()).toISOString() },
+                folders: {
+                  items: folders$.folders.get(),
+                  updatedAt: reviveDate(folders$.updatedAt.get()).toISOString(),
+                },
               })
               break
             case 'feedBookmarks':

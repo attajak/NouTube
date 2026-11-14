@@ -1,16 +1,35 @@
 import { describe, expect, test } from 'bun:test'
-import { ChatReplayBuffer, chatReplayImageUrl, chatReplayPollDelay, getChatReplay, shouldPrefetchChatReplay } from './live-chat-replay'
+import {
+  ChatReplayBuffer,
+  chatReplayImageUrl,
+  chatReplayPollDelay,
+  getChatReplay,
+  shouldPrefetchChatReplay,
+} from './live-chat-replay'
 
 const add = (id: string, authorExternalChannelId = 'author') => ({
-  addChatItemAction: { item: { liveChatTextMessageRenderer: { id, authorExternalChannelId, message: { simpleText: id } } } },
+  addChatItemAction: {
+    item: { liveChatTextMessageRenderer: { id, authorExternalChannelId, message: { simpleText: id } } },
+  },
 })
-const replay = (seconds: number, ...actions: any[]) => ({ replayChatItemAction: { videoOffsetTimeMsec: String(seconds * 1000), actions } })
+const replay = (seconds: number, ...actions: any[]) => ({
+  replayChatItemAction: { videoOffsetTimeMsec: String(seconds * 1000), actions },
+})
 
 describe('chat replay', () => {
   test('normalises protocol-relative images while rejecting insecure and executable URLs', () => {
-    expect(chatReplayImageUrl('//lh3.googleusercontent.com/sticker.png')).toBe('https://lh3.googleusercontent.com/sticker.png')
+    expect(chatReplayImageUrl('//lh3.googleusercontent.com/sticker.png')).toBe(
+      'https://lh3.googleusercontent.com/sticker.png',
+    )
     expect(chatReplayImageUrl('https://example.com/avatar.png')).toBe('https://example.com/avatar.png')
-    for (const url of [undefined, 42, 'http://example.com/image.png', 'javascript:alert(1)', 'data:image/svg+xml,x', '/image.png']) {
+    for (const url of [
+      undefined,
+      42,
+      'http://example.com/image.png',
+      'javascript:alert(1)',
+      'data:image/svg+xml,x',
+      '/image.png',
+    ]) {
       expect(chatReplayImageUrl(url)).toBeUndefined()
     }
   })
@@ -25,18 +44,29 @@ describe('chat replay', () => {
   test('includes gift redemption announcements with their author and message', () => {
     const buffer = new ChatReplayBuffer()
     const gift = {
-      id: 'gift', authorName: { simpleText: 'Recipient' }, message: { simpleText: 'Received a gift membership' },
+      id: 'gift',
+      authorName: { simpleText: 'Recipient' },
+      message: { simpleText: 'Received a gift membership' },
     }
-    buffer.append([replay(0, { addChatItemAction: { item: { liveChatSponsorshipsGiftRedemptionAnnouncementRenderer: gift } } })])
+    buffer.append([
+      replay(0, { addChatItemAction: { item: { liveChatSponsorshipsGiftRedemptionAnnouncementRenderer: gift } } }),
+    ])
     buffer.advance(0)
     expect(buffer.messages.get('gift')).toEqual(gift)
   })
 
   test('only offers replay when YouTube supplies a replay continuation', () => {
     const response = (isReplay: boolean, continuation?: string) => ({
-      contents: { twoColumnWatchNextResults: { conversationBar: { liveChatRenderer: {
-        isReplay, continuations: [{ reloadContinuationData: { continuation } }],
-      } } } },
+      contents: {
+        twoColumnWatchNextResults: {
+          conversationBar: {
+            liveChatRenderer: {
+              isReplay,
+              continuations: [{ reloadContinuationData: { continuation } }],
+            },
+          },
+        },
+      },
     })
     expect(getChatReplay(response(true, 'replay-token'))).toBe('replay-token')
     expect(getChatReplay(response(false, 'live-token'))).toBeUndefined()
@@ -68,7 +98,12 @@ describe('chat replay', () => {
     const buffer = new ChatReplayBuffer()
     buffer.append([
       replay(0, add('one'), add('two', 'other')),
-      replay(1, { replaceChatItemAction: { targetItemId: 'two', replacementItem: { liveChatTextMessageRenderer: { id: 'replacement' } } } }),
+      replay(1, {
+        replaceChatItemAction: {
+          targetItemId: 'two',
+          replacementItem: { liveChatTextMessageRenderer: { id: 'replacement' } },
+        },
+      }),
       replay(2, { markChatItemsByAuthorAsDeletedAction: { externalChannelId: 'author' } }),
       replay(3, { removeChatItemAction: { targetItemId: 'replacement' } }),
     ])
@@ -113,14 +148,26 @@ describe('chat replay', () => {
     const buffer = new ChatReplayBuffer()
     buffer.append([replay(0, add('one'), add('two'), add('three'))])
     buffer.advance(0)
-    buffer.append([replay(1, { replaceChatItemAction: {
-      targetItemId: 'two', replacementItem: { liveChatTextMessageRenderer: { id: 'replacement', message: { simpleText: 'edited' } } },
-    } })])
+    buffer.append([
+      replay(1, {
+        replaceChatItemAction: {
+          targetItemId: 'two',
+          replacementItem: { liveChatTextMessageRenderer: { id: 'replacement', message: { simpleText: 'edited' } } },
+        },
+      }),
+    ])
     buffer.advance(1)
     expect([...buffer.messages.keys()]).toEqual(['one', 'replacement', 'three'])
-    buffer.append([replay(2, { replaceChatItemAction: {
-      targetItemId: 'replacement', replacementItem: { liveChatTextMessageRenderer: { id: 'replacement', message: { simpleText: 'edited again' } } },
-    } })])
+    buffer.append([
+      replay(2, {
+        replaceChatItemAction: {
+          targetItemId: 'replacement',
+          replacementItem: {
+            liveChatTextMessageRenderer: { id: 'replacement', message: { simpleText: 'edited again' } },
+          },
+        },
+      }),
+    ])
     buffer.advance(2)
     expect([...buffer.messages.keys()]).toEqual(['one', 'replacement', 'three'])
     expect(buffer.messages.get('replacement')?.message.simpleText).toBe('edited again')
@@ -128,12 +175,24 @@ describe('chat replay', () => {
 
   test('skips placeholder renderers and preserves paid sticker images', () => {
     const buffer = new ChatReplayBuffer()
-    buffer.append([replay(0,
-      { addChatItemAction: { item: { liveChatPlaceholderItemRenderer: { id: 'placeholder' } } } },
-      { addChatItemAction: { item: { liveChatPaidStickerRenderer: { id: 'sticker', sticker: {
-        thumbnails: [{ url: 'https://example.com/sticker.png' }],
-      } } } } },
-    )])
+    buffer.append([
+      replay(
+        0,
+        { addChatItemAction: { item: { liveChatPlaceholderItemRenderer: { id: 'placeholder' } } } },
+        {
+          addChatItemAction: {
+            item: {
+              liveChatPaidStickerRenderer: {
+                id: 'sticker',
+                sticker: {
+                  thumbnails: [{ url: 'https://example.com/sticker.png' }],
+                },
+              },
+            },
+          },
+        },
+      ),
+    ])
     buffer.advance(0)
     expect([...buffer.messages.keys()]).toEqual(['sticker'])
     expect(buffer.messages.get('sticker')?.sticker.thumbnails[0].url).toBe('https://example.com/sticker.png')
@@ -143,9 +202,14 @@ describe('chat replay', () => {
     const buffer = new ChatReplayBuffer()
     buffer.append([replay(0, add('one'), add('two'))])
     buffer.advance(0)
-    buffer.append([replay(1, { replaceChatItemAction: {
-      targetItemId: 'one', replacementItem: { liveChatPlaceholderItemRenderer: { id: 'placeholder' } },
-    } })])
+    buffer.append([
+      replay(1, {
+        replaceChatItemAction: {
+          targetItemId: 'one',
+          replacementItem: { liveChatPlaceholderItemRenderer: { id: 'placeholder' } },
+        },
+      }),
+    ])
     buffer.advance(1)
     expect([...buffer.messages.keys()]).toEqual(['two'])
   })

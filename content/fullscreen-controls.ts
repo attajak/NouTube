@@ -18,37 +18,45 @@ const brightnessKey = 'nou:brightness'
 const sideKey = 'nou:fsControlsSide'
 const rightClass = 'right'
 
-const iconTune = /* HTML */ `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-  <path
-    d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"
-  ></path>
-</svg>`
+const iconTune = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+    <path
+      d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"
+    ></path>
+  </svg>
+`
 
-const iconLock = /* HTML */ `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-  <path
-    d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9h-2zM9 7a3 3 0 0 1 6 0v2H9V7zm8 12H7v-8h10v8z"
-  ></path>
-</svg>`
+const iconLock = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+    <path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9h-2zM9 7a3 3 0 0 1 6 0v2H9V7zm8 12H7v-8h10v8z"></path>
+  </svg>
+`
 
-const iconLockOpen = /* HTML */ `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-  <path
-    d="M17 9H9V7a3 3 0 0 1 5.83-1l1.9-.62A5 5 0 0 0 7 7v2H5v12h14V9zm0 10H7v-8h10v8z"
-  ></path>
-</svg>`
+const iconLockOpen = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+    <path d="M17 9H9V7a3 3 0 0 1 5.83-1l1.9-.62A5 5 0 0 0 7 7v2H5v12h14V9zm0 10H7v-8h10v8z"></path>
+  </svg>
+`
 
-const iconSwap = /* HTML */ `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-  <path d="M6.99 11 3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path>
-</svg>`
+const iconSwap = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M6.99 11 3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path>
+  </svg>
+`
 
-const iconVolume = /* HTML */ `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.06A4.5 4.5 0 0 0 16.5 12z"></path>
-</svg>`
+const iconVolume = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.06A4.5 4.5 0 0 0 16.5 12z"></path>
+  </svg>
+`
 
-const iconBrightness = /* HTML */ `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-  <path
-    d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zm12.1 12.1 1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zM5.6 19.8l-1.4-1.4 2.1-2.1 1.4 1.4-2.1 2.1zM18.4 4.2l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1z"
-  ></path>
-</svg>`
+const iconBrightness = /* HTML */ `
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path
+      d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zm12.1 12.1 1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1zM5.6 19.8l-1.4-1.4 2.1-2.1 1.4 1.4-2.1 2.1zM18.4 4.2l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1z"
+    ></path>
+  </svg>
+`
 
 let revealTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -351,8 +359,7 @@ function setWebVolume(value: number) {
   setBoost(value <= 100 ? 1 : value / 100)
 }
 
-const formatVolume = (value: number, max: number) =>
-  `${Math.round(hasNativeVolume() ? (value / max) * 100 : value)}%`
+const formatVolume = (value: number, max: number) => `${Math.round(hasNativeVolume() ? (value / max) * 100 : value)}%`
 
 function getAvailableQualities() {
   const levels = getPlayer()?.getAvailableQualityLevels?.()
@@ -411,9 +418,16 @@ function renderPanelContent(panel: HTMLElement) {
 
   panel.innerHTML = nouPolicy.createHTML(/* HTML */ `
     <div class="${rowClass}">
-      ${window.isAndroid
-        ? /* HTML */ `<button type="button" id="_nou_fs_lock">${iconLock}<span>Lock</span></button>`
-        : ''}
+      ${
+        window.isAndroid
+          ? /* HTML */ `
+              <button type="button" id="_nou_fs_lock">
+                ${iconLock}
+                <span>Lock</span>
+              </button>
+            `
+          : ''
+      }
       <button type="button" id="_nou_fs_side" aria-label="Switch side">${iconSwap}</button>
     </div>
     <div class="${rowClass}">
@@ -424,37 +438,43 @@ function renderPanelContent(panel: HTMLElement) {
       <span class="_nou_fs_label">Quality</span>
       <div class="_nou_fs_chips">${qualityChips}</div>
     </div>
-    ${volume
-      ? /* HTML */ `<div class="${rowClass}">
-          ${iconVolume}
-          <input
-            class="${sliderClass}"
-            id="_nou_fs_volume"
-            type="range"
-            min="0"
-            max="${volume.max}"
-            step="1"
-            value="${volume.value}"
-          />
-          <span class="_nou_fs_value" id="_nou_fs_volume_value"
-            >${formatVolume(volume.value, volume.max)}</span
-          >
-        </div>`
-      : ''}
-    ${hasNativeBrightness()
-      ? /* HTML */ `<div class="${rowClass}">
-          ${iconBrightness}
-          <input
-            class="${sliderClass}"
-            id="_nou_fs_brightness"
-            type="range"
-            min="1"
-            max="100"
-            step="1"
-            value="${brightness}"
-          />
-        </div>`
-      : ''}
+    ${
+      volume
+        ? /* HTML */ `
+            <div class="${rowClass}">
+              ${iconVolume}
+              <input
+                class="${sliderClass}"
+                id="_nou_fs_volume"
+                type="range"
+                min="0"
+                max="${volume.max}"
+                step="1"
+                value="${volume.value}"
+              />
+              <span class="_nou_fs_value" id="_nou_fs_volume_value">${formatVolume(volume.value, volume.max)}</span>
+            </div>
+          `
+        : ''
+    }
+    ${
+      hasNativeBrightness()
+        ? /* HTML */ `
+            <div class="${rowClass}">
+              ${iconBrightness}
+              <input
+                class="${sliderClass}"
+                id="_nou_fs_brightness"
+                type="range"
+                min="1"
+                max="100"
+                step="1"
+                value="${brightness}"
+              />
+            </div>
+          `
+        : ''
+    }
   `)
 
   panel.querySelector<HTMLButtonElement>('#_nou_fs_lock')?.addEventListener('click', () => {

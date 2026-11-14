@@ -52,7 +52,11 @@ export default defineBackground(() => {
       .then(() => addBookmarkFromUrl(info.linkUrl!))
       .then((result) => {
         if (tab?.id != null) {
-          return showBookmarkResult(tab.id, result === 'already-saved' ? '=' : '✓', result === 'already-saved' ? '#71717a' : '#16a34a')
+          return showBookmarkResult(
+            tab.id,
+            result === 'already-saved' ? '=' : '✓',
+            result === 'already-saved' ? '#71717a' : '#16a34a',
+          )
         }
       })
       .catch((error) => {

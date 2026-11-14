@@ -95,7 +95,9 @@ export const buildCaptionCss = (style?: SystemCaptionStyle | null) => {
     segmentRules.push(`background-color: ${argbToCssColor(style.backgroundColor)} !important;`)
   }
   if (style.edgeType != null) {
-    textRules.push(`text-shadow: ${edgeShadow(style.edgeType, argbToCssColor(style.edgeColor ?? 0xff000000))} !important;`)
+    textRules.push(
+      `text-shadow: ${edgeShadow(style.edgeType, argbToCssColor(style.edgeColor ?? 0xff000000))} !important;`,
+    )
   }
   if (style.windowColor != null) {
     windowRules.push(`background-color: ${argbToCssColor(style.windowColor)} !important;`)

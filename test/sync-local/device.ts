@@ -80,7 +80,12 @@ async function signIn(email: string, password: string) {
 await signIn(process.env.NOUTUBE_SYNC_EMAIL!, process.env.NOUTUBE_SYNC_PASSWORD!)
 auth$.plan.set('sync')
 
-const syncers = { bookmarks: bookmarksSyncer, folders: foldersSyncer, settings: settingsSyncer, userStyles: userStylesSyncer }
+const syncers = {
+  bookmarks: bookmarksSyncer,
+  folders: foldersSyncer,
+  settings: settingsSyncer,
+  userStyles: userStylesSyncer,
+}
 // By key, as the app finds the bookmark of a page: urls are stored in their normalized form.
 const findBookmark = (url: string) => bookmarks$.getBookmarkByUrl(url)
 
@@ -136,7 +141,13 @@ async function execute(command: Command) {
       userStyles$.setBuiltinEnabled('hide-shorts-navbar', command.enabled)
       break
     case 'customScript':
-      return userStyles$.addCustomScript({ name: command.name, enabled: true, pinToHeader: false, runAt: 'document-end', js: 'void 0' })
+      return userStyles$.addCustomScript({
+        name: command.name,
+        enabled: true,
+        pinToHeader: false,
+        runAt: 'document-end',
+        js: 'void 0',
+      })
     case 'failNextPush':
       failPath = command.path
       break

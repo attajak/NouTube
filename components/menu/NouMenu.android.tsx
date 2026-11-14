@@ -14,7 +14,12 @@ type Anchor = {
   height: number
 }
 
-export const NouMenu: React.FC<{ trigger?: ReactNode; items: Item[]; triggerColor?: string; side?: 'top' | 'right' | 'bottom' | 'left' }> = ({ items, trigger, triggerColor }) => {
+export const NouMenu: React.FC<{
+  trigger?: ReactNode
+  items: Item[]
+  triggerColor?: string
+  side?: 'top' | 'right' | 'bottom' | 'left'
+}> = ({ items, trigger, triggerColor }) => {
   const tw = useTwColor()
   const [open, setOpen] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
@@ -72,7 +77,9 @@ export const NouMenu: React.FC<{ trigger?: ReactNode; items: Item[]; triggerColo
         ) : trigger ? (
           <Pressable onPress={openMenu}>
             <View pointerEvents="none">
-              {isValidElement(trigger) ? cloneElement(trigger as React.ReactElement<any>, { color: resolvedTriggerColor }) : trigger}
+              {isValidElement(trigger)
+                ? cloneElement(trigger as React.ReactElement<any>, { color: resolvedTriggerColor })
+                : trigger}
             </View>
           </Pressable>
         ) : (

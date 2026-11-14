@@ -1,4 +1,13 @@
-import { ActivityIndicator, Platform, Pressable, Switch, TextInput, View, useColorScheme, type TextInputProps } from 'react-native'
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  Switch,
+  TextInput,
+  View,
+  useColorScheme,
+  type TextInputProps,
+} from 'react-native'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { debounce } from 'es-toolkit'
 import { useLocales } from 'expo-localization'
@@ -16,7 +25,12 @@ import { showToast } from '@/lib/toast'
 import { showConfirm } from '@/lib/confirm'
 import JSZip from 'jszip'
 import { exportBookmarksCsv } from '@/lib/export'
-import { applySettingsBackup, exportSettingsJson, parseSettingsBackup, settingsBackupFilename } from '@/lib/settings-transfer'
+import {
+  applySettingsBackup,
+  exportSettingsJson,
+  parseSettingsBackup,
+  settingsBackupFilename,
+} from '@/lib/settings-transfer'
 import { t } from 'i18next'
 import { saveFile } from '@/lib/file'
 import { NouText } from '../NouText'
@@ -33,10 +47,7 @@ import {
   toBcp47Locale,
 } from '@/lib/i18n'
 import { getTranslationSupportedLanguages } from '@/lib/translation'
-import {
-  builtinUserStyleDefinitionById,
-  type BuiltinUserStyleId,
-} from '@/lib/user-styles'
+import { builtinUserStyleDefinitionById, type BuiltinUserStyleId } from '@/lib/user-styles'
 import { userStyles$ } from '@/states/user-styles'
 import { useTwColor } from '@/lib/theme'
 import { setFeedNotificationsEnabled } from '@/lib/feed-notifications'
@@ -44,11 +55,9 @@ import { feederLoop } from '@/lib/feeder'
 
 const themes = [null, 'dark', 'light'] as const
 const headerPositions = ['top', 'bottom'] as const
-const surfaceCls =
-  'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
+const surfaceCls = 'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
 const sectionLabelCls = 'mb-2 px-1 text-[11px] uppercase tracking-[0.18em] text-zinc-600 dark:text-zinc-500'
-const iconWrapCls =
-  'h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-950'
+const iconWrapCls = 'h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-950'
 
 const translationLanguageNames: Record<string, string> = {
   af: 'Afrikaans',
@@ -349,9 +358,15 @@ const ProxyTextInput = ({ field, ...props }: TextInputProps & { field: ProxyFiel
     <TextInput
       {...props}
       value={draft}
-      onChangeText={(text) => { setDraft(text); commit(text) }}
+      onChangeText={(text) => {
+        setDraft(text)
+        commit(text)
+      }}
       onBlur={() => commit.flush()}
-      onEndEditing={({ nativeEvent }) => { commit(nativeEvent.text); commit.flush() }}
+      onEndEditing={({ nativeEvent }) => {
+        commit(nativeEvent.text)
+        commit.flush()
+      }}
     />
   )
 }
@@ -469,13 +484,18 @@ export const SettingsPreferencesContent = () => {
                 {nIf(
                   supportsProxy,
                   (['proxyUsername', 'proxyPassword'] as const).map((key) => (
-                    <View key={key} className="flex-row items-center justify-between gap-3 border-t border-zinc-300 px-4 py-4 dark:border-zinc-800">
+                    <View
+                      key={key}
+                      className="flex-row items-center justify-between gap-3 border-t border-zinc-300 px-4 py-4 dark:border-zinc-800"
+                    >
                       <NouText className="w-24 font-medium">
                         {t(key === 'proxyUsername' ? 'settings.proxy.username' : 'settings.proxy.password')}
                       </NouText>
                       <ProxyTextInput
                         className="flex-1 rounded-lg border border-zinc-300 bg-zinc-100 px-3 py-2 text-right text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
-                        accessibilityLabel={t(key === 'proxyUsername' ? 'settings.proxy.username' : 'settings.proxy.password')}
+                        accessibilityLabel={t(
+                          key === 'proxyUsername' ? 'settings.proxy.username' : 'settings.proxy.password',
+                        )}
                         field={key}
                         secureTextEntry={key === 'proxyPassword'}
                         autoCapitalize="none"
@@ -495,7 +515,6 @@ export const SettingsPreferencesContent = () => {
           </View>
         </SettingsSection>
       </View>
-
     </View>
   )
 }
@@ -807,7 +826,11 @@ export const SettingsAppearanceContent = () => {
           <View className={surfaceCls}>
             <View className="flex-row items-center gap-3 px-4 py-4 border-b-2 border-zinc-100 dark:border-zinc-950">
               <View className={iconWrapCls}>
-                <MaterialIcons name="vertical-align-bottom" color={isDark ? tw('zinc-300') : tw('slate-600')} size={18} />
+                <MaterialIcons
+                  name="vertical-align-bottom"
+                  color={isDark ? tw('zinc-300') : tw('slate-600')}
+                  size={18}
+                />
               </View>
               <NouText className="flex-1 font-medium">{t('settings.headerPosition.label')}</NouText>
               <Segmented
@@ -883,10 +906,7 @@ export const SettingsAppearanceContent = () => {
                 }}
               />,
             )}
-            {nIf(
-              !isWeb && settings.feedsEnabled,
-              <FeedNotificationsToggle />,
-            )}
+            {nIf(!isWeb && settings.feedsEnabled, <FeedNotificationsToggle />)}
             {nIf(
               !isWeb,
               <>
@@ -1161,7 +1181,7 @@ export const SettingsToolsContent = () => {
               onPress={handleUpdateYtDlp}
               loading={updatingYtDlp}
               isLast
-              />,
+            />,
           )}
         </View>
       </SettingsSection>

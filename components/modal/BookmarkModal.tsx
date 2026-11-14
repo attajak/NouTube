@@ -88,17 +88,13 @@ const BookmarkModalContent: React.FC<{
 
   const onRemove = () => {
     if (bookmarkModalMode === 'feed') {
-      showConfirm(
-        t('feeds.removeTitle', { title: bookmark.title }),
-        t('feeds.removeMessage'),
-        () => {
-          bookmarks$.toggleBookmark(bookmark)
-          if (bookmark.json.id) {
-            feeds$.removeChannel(bookmark.json.id)
-          }
-          onClose()
-        },
-      )
+      showConfirm(t('feeds.removeTitle', { title: bookmark.title }), t('feeds.removeMessage'), () => {
+        bookmarks$.toggleBookmark(bookmark)
+        if (bookmark.json.id) {
+          feeds$.removeChannel(bookmark.json.id)
+        }
+        onClose()
+      })
       return
     }
 
@@ -150,7 +146,11 @@ const BookmarkModalContent: React.FC<{
                       selected && 'bg-indigo-50 dark:bg-zinc-800',
                     )}
                   >
-                    <MaterialIcons name={item.id === NEW_FOLDER_ID ? 'create-new-folder' : 'folder'} size={22} color={tw('zinc-400')} />
+                    <MaterialIcons
+                      name={item.id === NEW_FOLDER_ID ? 'create-new-folder' : 'folder'}
+                      size={22}
+                      color={tw('zinc-400')}
+                    />
                     <NouText className={clsx('flex-1', selected && 'font-semibold')}>{item.name}</NouText>
                     {nIf(selected, <MaterialIcons name="check" size={22} color={tw('indigo-500')} />)}
                   </Pressable>
@@ -163,7 +163,9 @@ const BookmarkModalContent: React.FC<{
           <NouButton variant="outline" size="2" textClassName="text-red-600 dark:text-red-400" onPress={onRemove}>
             {bookmarkModalMode === 'feed' ? t('buttons.unsubscribe') : t('buttons.remove')}
           </NouButton>
-          <NouButton size="2" onPress={onSubmit}>{t('buttons.save')}</NouButton>
+          <NouButton size="2" onPress={onSubmit}>
+            {t('buttons.save')}
+          </NouButton>
         </View>
       </View>
     </BaseCenterModal>

@@ -186,8 +186,20 @@ local('sync against local Supabase', () => {
   it('keeps every account to its own rows through the API', async () => {
     const [one, two] = users
     await one.client.rpc('nou_put_doc', { p_user: one.id, p_table: 'nou_settings', p_json: { a: 1 }, p_base: null })
-    expect((await one.client.from('nou_bookmarks').insert({ id: crypto.randomUUID(), user_id: one.id, url: 'https://x', title: 'x', json: {} })).error).toBeNull()
-    expect((await one.client.from('nou_folders').insert({ id: crypto.randomUUID(), user_id: one.id, name: 'F', json: { tab: 'yt' } })).error).toBeNull()
+    expect(
+      (
+        await one.client
+          .from('nou_bookmarks')
+          .insert({ id: crypto.randomUUID(), user_id: one.id, url: 'https://x', title: 'x', json: {} })
+      ).error,
+    ).toBeNull()
+    expect(
+      (
+        await one.client
+          .from('nou_folders')
+          .insert({ id: crypto.randomUUID(), user_id: one.id, name: 'F', json: { tab: 'yt' } })
+      ).error,
+    ).toBeNull()
 
     for (const table of tables) {
       const { data, error } = await two.client.from(table).select('user_id')
@@ -197,7 +209,12 @@ local('sync against local Supabase', () => {
     const [own] = await rows('nou_bookmarks')
     const hijack = await two.client.from('nou_bookmarks').upsert({ ...own, user_id: two.id, title: 'hijacked' })
     expect(hijack.error).not.toBeNull()
-    const foreign = await two.client.rpc('nou_put_doc', { p_user: one.id, p_table: 'nou_settings', p_json: {}, p_base: null })
+    const foreign = await two.client.rpc('nou_put_doc', {
+      p_user: one.id,
+      p_table: 'nou_settings',
+      p_json: {},
+      p_base: null,
+    })
     expect(foreign.error?.code).toBe('42501')
     expect((await rows('nou_bookmarks'))[0].title).toBe('x')
   })
@@ -205,9 +222,16 @@ local('sync against local Supabase', () => {
   it('refuses sync writes from an account without a plan, and from one whose plan lapsed', async () => {
     const [, two] = users
     await setPlan(two.id, 'expired')
-    const bookmark = await two.client.from('nou_bookmarks').insert({ id: crypto.randomUUID(), user_id: two.id, url: 'https://x', title: 'x', json: {} })
+    const bookmark = await two.client
+      .from('nou_bookmarks')
+      .insert({ id: crypto.randomUUID(), user_id: two.id, url: 'https://x', title: 'x', json: {} })
     expect(bookmark.error?.code).toBe('42501')
-    const doc = await two.client.rpc('nou_put_doc', { p_user: two.id, p_table: 'nou_settings', p_json: {}, p_base: null })
+    const doc = await two.client.rpc('nou_put_doc', {
+      p_user: two.id,
+      p_table: 'nou_settings',
+      p_json: {},
+      p_base: null,
+    })
     expect(doc.error?.message).toContain('requires a plan')
 
     // The device sees the refusal and keeps the change to push once the plan is back.

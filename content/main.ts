@@ -126,8 +126,7 @@ function installDoubleTapGestures() {
       ),
     )
 
-  const isFullscreen = () =>
-    Boolean(document.fullscreenElement || (document as any).webkitFullscreenElement)
+  const isFullscreen = () => Boolean(document.fullscreenElement || (document as any).webkitFullscreenElement)
 
   document.addEventListener(
     'touchstart',

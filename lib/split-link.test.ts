@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'bun:test'
 import { findSplitLink } from '../content/split-link'
 
-const eventWithPath = (...path: unknown[]) => ({
-  composedPath: () => path,
-  target: path[0],
-}) as Pick<MouseEvent, 'composedPath' | 'target'>
+const eventWithPath = (...path: unknown[]) =>
+  ({
+    composedPath: () => path,
+    target: path[0],
+  }) as Pick<MouseEvent, 'composedPath' | 'target'>
 
 describe('split navigation links', () => {
   it('recognizes the mobile Home button when its nested logo is tapped', () => {

@@ -181,7 +181,10 @@ export abstract class DocumentSyncer<T> {
       if (action === 'noop') {
         // Synced before the base was kept: nothing changed on either side, so the row read is
         // what both agree on, and the next merge can tell whose change is whose.
-        const base = !meta.base && remote && remote.updatedAt === meta.lastSyncedRemoteUpdatedAt ? { base: cloneValue(remote.value) } : {}
+        const base =
+          !meta.base && remote && remote.updatedAt === meta.lastSyncedRemoteUpdatedAt
+            ? { base: cloneValue(remote.value) }
+            : {}
         this.setMeta({ ...base, lastError: undefined, lastSuccessfulSyncAt: Date.now() })
         return
       }
@@ -289,7 +292,11 @@ export abstract class DocumentSyncer<T> {
   }
 
   /** Writes `value` if the row is still the one of `base` (no row, when absent). */
-  protected async saveRemote(userId: string, value: T, base: string | undefined): Promise<{ ok: boolean; updatedAt?: string }> {
+  protected async saveRemote(
+    userId: string,
+    value: T,
+    base: string | undefined,
+  ): Promise<{ ok: boolean; updatedAt?: string }> {
     // The server refuses it when the token the request carries is of another account.
     const { data, error } = await supabase.rpc('nou_put_doc', {
       p_user: userId,

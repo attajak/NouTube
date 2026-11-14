@@ -60,7 +60,6 @@ export const blocklistChannelsMatch = (texts: Array<string | undefined>, entries
   return texts.some((text) => blocklistChannelMatches(text, entries))
 }
 
-
 export const createBlocklistEntry = (value: string, existing?: Partial<BlocklistEntry>): BlocklistEntry | null => {
   const normalized = normalizeBlocklistValue(value)
   if (!normalized) {

@@ -69,7 +69,7 @@ describe('addHistory', () => {
     expect(history$.bookmarks.get()).toEqual(before)
     settings$.keepHistory.set(true)
     add('b')
-    expect(history$.bookmarks.get().map(x => x.videoId)).toEqual(['b', 'a'])
+    expect(history$.bookmarks.get().map((x) => x.videoId)).toEqual(['b', 'a'])
   })
 })
 

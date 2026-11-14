@@ -20,7 +20,10 @@ class FakeServer {
   beforeWrite?: () => void
 
   put(value: TestValue) {
-    this.row = { value: structuredClone(value), updatedAt: `2026-11-09T00:00:${String(this.clock++).padStart(2, '0')}.000Z` }
+    this.row = {
+      value: structuredClone(value),
+      updatedAt: `2026-11-09T00:00:${String(this.clock++).padStart(2, '0')}.000Z`,
+    }
   }
 }
 

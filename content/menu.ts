@@ -17,7 +17,10 @@ const stripPlaylistContext = (url: string) => {
 
 const makeMenuItem = ({ icon, label }: { icon: string; label: string }) =>
   nouPolicy.createHTML(/* HTML */ `
-    <button class="menu-item-button" style="display: flex; align-items: center; width: 100%; padding: 0 16px; min-height: 48px; background: none; border: none; font-family: inherit; font-size: 14px; text-align: left; cursor: pointer;">
+    <button
+      class="menu-item-button"
+      style="display: flex; align-items: center; width: 100%; padding: 0 16px; min-height: 48px; background: none; border: none; font-family: inherit; font-size: 14px; text-align: left; cursor: pointer;"
+    >
       <c3-icon fill-icon="false" style="margin-right: 16px; flex-shrink: 0; width: 24px; height: 24px;">
         <span class="yt-icon-shape yt-spec-icon-shape" style="width: 24px; height: 24px; display: block;">
           <div style="width: 24px; height: 24px; display: block; fill: currentcolor;">${icon}</div>
@@ -34,12 +37,20 @@ const makePaperItem = ({ icon, label }: { icon: string; label: string }) =>
       role="option"
       style="display: flex; align-items: center; width: 100%; padding: 0 16px; min-height: 40px; cursor: pointer;"
     >
-      <yt-icon class="style-scope ytd-menu-service-item-renderer" style="margin-right: 16px; flex-shrink: 0; width: 24px; height: 24px;">
-        <span class="yt-icon-shape style-scope yt-icon ytSpecIconShapeHost" style="width: 24px; height: 24px; display: block;">
+      <yt-icon
+        class="style-scope ytd-menu-service-item-renderer"
+        style="margin-right: 16px; flex-shrink: 0; width: 24px; height: 24px;"
+      >
+        <span
+          class="yt-icon-shape style-scope yt-icon ytSpecIconShapeHost"
+          style="width: 24px; height: 24px; display: block;"
+        >
           <div style="width: 24px; height: 24px; display: block; fill: currentcolor;">${icon}</div>
         </span>
       </yt-icon>
-      <yt-formatted-string class="style-scope ytd-menu-service-item-renderer" style="flex: 1; font-size: 14px;">${label} 🦦</yt-formatted-string>
+      <yt-formatted-string class="style-scope ytd-menu-service-item-renderer" style="flex: 1; font-size: 14px;">
+        ${label} 🦦
+      </yt-formatted-string>
     </tp-yt-paper-item>
   `)
 
@@ -162,12 +173,7 @@ export function handleMenu() {
       if (window.NouTubeI) {
         const queueCls = '_nou_queue_'
         menu.querySelectorAll(`.${queueCls}`).forEach((el) => el.remove())
-        menuItem = createMenuItem(
-          menu,
-          { icon: iconAddQueue, label: 'Add to queue' },
-          queueCls,
-          listItemTemplate,
-        )
+        menuItem = createMenuItem(menu, { icon: iconAddQueue, label: 'Add to queue' }, queueCls, listItemTemplate)
         menuItem.onclick = () => {
           if (url) {
             emit('add-queue', { title, url })
@@ -208,7 +214,9 @@ export function handleMenu() {
           if (icon?.hasAttribute('hidden')) {
             icon.innerHTML = nouPolicy.createHTML(/* HTML */ `
               <span class="yt-icon-shape style-scope yt-icon ytSpecIconShapeHost">
-                <div style="width: 100%; height: 100%; display: block; fill: currentcolor;">${downloadItemData.icon}</div>
+                <div style="width: 100%; height: 100%; display: block; fill: currentcolor;">
+                  ${downloadItemData.icon}
+                </div>
               </span>
             `)
             icon.removeAttribute('hidden')

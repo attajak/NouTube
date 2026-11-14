@@ -29,9 +29,9 @@ describe('settings transfer', () => {
     expect(() => parseSettingsBackup(JSON.stringify({ kind: SETTINGS_BACKUP_KIND }))).toThrow(
       'Unsupported NouTube settings file version',
     )
-    expect(() =>
-      parseSettingsBackup(JSON.stringify({ kind: SETTINGS_BACKUP_KIND, version: 2, settings: {} })),
-    ).toThrow('created by a newer version')
+    expect(() => parseSettingsBackup(JSON.stringify({ kind: SETTINGS_BACKUP_KIND, version: 2, settings: {} }))).toThrow(
+      'created by a newer version',
+    )
     expect(() => parseSettingsBackup(JSON.stringify({ kind: SETTINGS_BACKUP_KIND, version: 1 }))).toThrow(
       'Nothing to import',
     )

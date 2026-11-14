@@ -1,11 +1,18 @@
 // Thumbnail links often contain only a duration or LIVE badge. Resolve the
 // heading on the same video card before considering the link's own text.
 const VIDEO_CARD = [
-  'ytm-media-item', 'ytm-compact-video-renderer', 'ytm-video-card-renderer',
-  'ytm-playlist-video-renderer', 'ytm-rich-item-renderer',
-  'ytd-video-renderer', 'ytd-grid-video-renderer', 'ytd-compact-video-renderer',
-  'ytd-playlist-video-renderer', 'yt-lockup-view-model',
-  'ytmusic-responsive-list-item-renderer', 'ytmusic-two-row-item-renderer',
+  'ytm-media-item',
+  'ytm-compact-video-renderer',
+  'ytm-video-card-renderer',
+  'ytm-playlist-video-renderer',
+  'ytm-rich-item-renderer',
+  'ytd-video-renderer',
+  'ytd-grid-video-renderer',
+  'ytd-compact-video-renderer',
+  'ytd-playlist-video-renderer',
+  'yt-lockup-view-model',
+  'ytmusic-responsive-list-item-renderer',
+  'ytmusic-two-row-item-renderer',
 ].join(',')
 
 function videoId(href: string, base: string): string | undefined {
@@ -26,14 +33,15 @@ export function getVideoLinkTitle(href: string, root: Document = document): stri
   const id = videoId(href, base)
   if (!id) return ''
 
-  const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]'))
-    .filter((link) => videoId(link.getAttribute('href') || '', base) === id)
+  const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]')).filter(
+    (link) => videoId(link.getAttribute('href') || '', base) === id,
+  )
 
   for (const link of links) {
     const card = link.closest(VIDEO_CARD)
-    const title = card?.querySelector(
-      'h3, h4, #video-title, .yt-lockup-metadata-view-model__title, .title',
-    )?.textContent?.trim()
+    const title = card
+      ?.querySelector('h3, h4, #video-title, .yt-lockup-metadata-view-model__title, .title')
+      ?.textContent?.trim()
     if (title) return title
   }
 

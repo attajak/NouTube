@@ -35,11 +35,9 @@ const donateLinks = [
   { label: 'PayPal', detail: 'paypal.me/nonbili', url: 'https://paypal.me/nonbili' },
   { label: 'Stripe', detail: 'donate.stripe.com', url: 'https://donate.stripe.com/cNiaEXbunbcS0oTa9P48000' },
 ]
-export const surfaceCls =
-  'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
+export const surfaceCls = 'overflow-hidden rounded-[24px] bg-white dark:bg-zinc-900'
 export const sectionLabelCls = 'mb-2 px-1 text-[11px] uppercase tracking-[0.18em] text-zinc-600 dark:text-zinc-500'
-export const iconWrapCls =
-  'h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-950'
+export const iconWrapCls = 'h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-950'
 
 export type SettingsPage =
   | 'home'
@@ -425,7 +423,13 @@ export const SettingsTree = forwardRef<
 
             <SettingsSection label={t('about.code')}>
               <View className={surfaceCls}>
-                <SettingsExternalRow title="GitHub" detail="github.com/nonbili/NouTube" href={repo} icon="code" isLast />
+                <SettingsExternalRow
+                  title="GitHub"
+                  detail="github.com/nonbili/NouTube"
+                  href={repo}
+                  icon="code"
+                  isLast
+                />
               </View>
             </SettingsSection>
 
@@ -470,7 +474,11 @@ export const SettingsTree = forwardRef<
               }}
               className="h-11 w-11 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-900"
             >
-              <MaterialIcons name={canGoBack ? 'arrow-back' : 'close'} color={isDark ? 'white' : tw('gray-900')} size={22} />
+              <MaterialIcons
+                name={canGoBack ? 'arrow-back' : 'close'}
+                color={isDark ? 'white' : tw('gray-900')}
+                size={22}
+              />
             </Pressable>
           ) : null}
           <View className="flex-1">

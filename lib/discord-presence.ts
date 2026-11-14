@@ -102,7 +102,8 @@ export const buildDiscordActivity = (
     type: music ? 2 : 3,
     details: clip(playback.title),
     state: clip(playback.author),
-    timestamps: playback.duration > 0 ? { start, end: Math.round(start + (playback.duration * 1000) / rate) } : { start },
+    timestamps:
+      playback.duration > 0 ? { start, end: Math.round(start + (playback.duration * 1000) / rate) } : { start },
   }
   if (applicationId) {
     activity.application_id = applicationId

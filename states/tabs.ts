@@ -112,7 +112,9 @@ function pushRecentlyClosedTab(tab: Tab | undefined) {
     return
   }
   const history = tabs$.recentlyClosedTabs.get()
-  tabs$.recentlyClosedTabs.set([{ ...tab, closedAt: Date.now(), isLoading: false }, ...history].slice(0, MAX_RECENTLY_CLOSED_TABS))
+  tabs$.recentlyClosedTabs.set(
+    [{ ...tab, closedAt: Date.now(), isLoading: false }, ...history].slice(0, MAX_RECENTLY_CLOSED_TABS),
+  )
 }
 
 export const tabs$: Observable<Store> = observable<Store>({

@@ -38,7 +38,9 @@ window.addEventListener('noutube:settings', applySavedAutoplayPolicy)
 // Attribute observation also catches YouTube re-enabling the toggle.
 if (typeof MutationObserver !== 'undefined') {
   new MutationObserver(throttle(applySavedAutoplayPolicy, 1000)).observe(document, {
-    childList: true, subtree: true, attributes: true,
+    childList: true,
+    subtree: true,
+    attributes: true,
     attributeFilter: ['aria-checked', 'aria-pressed'],
   })
 }
@@ -207,7 +209,9 @@ export function handleVideoPlayer(el: any) {
   extendPlaybackQuality(player)
   // onApiChange fires when the player's modules (captions included) load, which
   // is the earliest point setOption('captions', ...) is accepted.
-  const onApiChange = () => { if (isCurrent()) applyCaptionFontScale(el) }
+  const onApiChange = () => {
+    if (isCurrent()) applyCaptionFontScale(el)
+  }
   el.addEventListener('onApiChange', onApiChange)
   applySavedAutoplayPolicy()
   applyCaptionFontScale(el)
@@ -217,7 +221,7 @@ export function handleVideoPlayer(el: any) {
   // Everything the save needs is read in one go, so a throttled call can never
   // pair one video's position with another's url: the trailing call replays the
   // snapshot it was given instead of re-reading the player as it is by then.
-  const getProgress = (currentTime: number) => isCurrent() ? readPlayerProgress(el, currentTime) : undefined
+  const getProgress = (currentTime: number) => (isCurrent() ? readPlayerProgress(el, currentTime) : undefined)
 
   const saveProgress = throttle((progress: NonNullable<ReturnType<typeof getProgress>>) => {
     if (!isCurrent() || el.getPlayerResponse?.()?.videoDetails?.videoId !== progress.videoId) return

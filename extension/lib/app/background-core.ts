@@ -171,7 +171,6 @@ export async function handle(message: RequestMessage): Promise<unknown> {
   }
 }
 
-
 export async function start() {
   const stored = await hydrateAppState()
   batch(() => {

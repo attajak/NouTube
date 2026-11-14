@@ -37,7 +37,12 @@ const overlayClass = '_nou_sb_segments'
 const segmentClass = '_nou_sb_segment'
 
 // The bar that spans the whole duration: new mobile layout, then desktop, then the older mobile one.
-const progressBarSelectors = ['.ytChapteredProgressBarHost', '.ytp-progress-list', '.progress-bar-line', '.progress-bar-background']
+const progressBarSelectors = [
+  '.ytChapteredProgressBarHost',
+  '.ytp-progress-list',
+  '.progress-bar-line',
+  '.progress-bar-background',
+]
 // Chaptered videos split the bar into per-chapter blocks separated by gaps, so a
 // segment has to be drawn piecewise to stay aligned with the time it covers.
 const chapterSelectors = ['.ytChapteredProgressBarChapteredPlayerBarChapter', '.ytp-chapter-hover-container']
@@ -82,7 +87,8 @@ function getChapters(bar: HTMLElement): Chapter[] {
   let start = 0
   for (const el of elements) {
     const percent = parseFloat(el.style.width)
-    const span = el.style.width.endsWith('%') && Number.isFinite(percent) ? percent / 100 : el.offsetWidth / (totalWidth || 1)
+    const span =
+      el.style.width.endsWith('%') && Number.isFinite(percent) ? percent / 100 : el.offsetWidth / (totalWidth || 1)
     chapters.push({ start, end: start + span, left: el.offsetLeft, width: el.offsetWidth })
     start += span
   }
@@ -109,9 +115,7 @@ export function renderSkipSegments(videoId: string, segments: Segment[], duratio
   for (const bar of getProgressBars()) {
     const overlay = bar.querySelector<HTMLElement>(`.${overlayClass}`)
     const chapters = getChapters(bar)
-    const chapterKey = chapters
-      .map(({ start, end, left, width }) => `${start}:${end}:${left}:${width}`)
-      .join(',')
+    const chapterKey = chapters.map(({ start, end, left, width }) => `${start}:${end}:${left}:${width}`).join(',')
     const key = `${videoId}:${duration}:${segmentKey}:${bar.offsetWidth}:${chapterKey}`
     // YouTube re-renders and resizes its controls, so redraw whenever the
     // overlay went away or its segments/chapter geometry changed.

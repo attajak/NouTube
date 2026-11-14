@@ -34,10 +34,10 @@ export const LibraryModal = () => {
   const home = isYTMusic ? 'yt-music' : 'yt'
   const folders = useValue(folders$.folders)
   const bookmarks = useValue(bookmarks$.bookmarks)
-  
+
   const [tabIndex, setTabIndex] = useState(0)
   const [currentFolder, setCurrentFolder] = useState<Folder>()
-  
+
   const tabs = isYTMusic ? tabsYTMusic : tabsYT
   const currentTab = tabs[tabIndex]
   const selectedFolder = currentFolder?.json.tab === currentTab.value ? currentFolder : undefined
@@ -104,7 +104,9 @@ export const LibraryModal = () => {
       ) : (
         <FlatList
           data={visibleItems}
-          keyExtractor={(item) => (item.type === 'folder' ? `folder-${item.folder.id}` : `bookmark-${item.bookmark.url}`)}
+          keyExtractor={(item) =>
+            item.type === 'folder' ? `folder-${item.folder.id}` : `bookmark-${item.bookmark.url}`
+          }
           renderItem={({ item }) =>
             item.type === 'folder' ? (
               <FolderItem folder={item.folder} onPress={() => setCurrentFolder(item.folder)} />

@@ -67,7 +67,8 @@ export class ChatReplayBuffer {
       for (const action of this.pending.shift()!.actions) {
         const item = action.addChatItemAction?.item || action.replaceChatItemAction?.replacementItem
         if (item) {
-          const message = messageRenderers.map((renderer) => item[renderer]).find((value) => value?.id) as ReplayMessage | undefined
+          const message = messageRenderers.map((renderer) => item[renderer]).find((value) => value?.id) as
+            ReplayMessage | undefined
           const replacedId = action.replaceChatItemAction?.targetItemId
           if (message) {
             if (replacedId && this.messages.has(replacedId) && replacedId !== message.id) {
@@ -88,7 +89,9 @@ export class ChatReplayBuffer {
         }
         const removedId = action.markChatItemAsDeletedAction?.targetItemId || action.removeChatItemAction?.targetItemId
         if (removedId) changed = this.messages.delete(removedId) || changed
-        const authorId = action.markChatItemsByAuthorAsDeletedAction?.externalChannelId || action.removeChatItemByAuthorAction?.externalChannelId
+        const authorId =
+          action.markChatItemsByAuthorAsDeletedAction?.externalChannelId ||
+          action.removeChatItemByAuthorAction?.externalChannelId
         if (authorId) {
           for (const [id, message] of this.messages) {
             if (message.authorExternalChannelId === authorId) changed = this.messages.delete(id) || changed

@@ -19,7 +19,7 @@ The images show real platform UI. iOS feed, distraction, and blocklist sources
 come from the original full-resolution simulator recordings in
 `../app-preview/captures/`; other sources are native screenshots. The iPad simulator reuses the iPhone demo
 settings and saved NASA channel data, rendered in the actual iPad layout. Feed entries
-are live NASA uploads. Lunar imagery is NASA Goddard's *Tour of the Moon in 4K*
+are live NASA uploads. Lunar imagery is NASA Goddard's _Tour of the Moon in 4K_
 ([visualization credit](https://svs.gsfc.nasa.gov/4619/)).
 
 The twelve iPhone/iPad exports were uploaded to App Store Connect version

@@ -564,9 +564,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
     const settings = getContentSettingsSnapshot()
     const value = JSON.stringify(settings)
     for (const ref of nativeViews()) {
-      ref.executeJavaScript(
-        `localStorage.setItem('nou:settings', '${value}'); window.NouTube?.setSettings?.(${value})`,
-      )
+      ref.executeJavaScript(`localStorage.setItem('nou:settings', '${value}'); window.NouTube?.setSettings?.(${value})`)
     }
     if (isWeb) {
       // Electron strips ads in the main process rather than in the page (see
@@ -639,13 +637,14 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
       // Preloading home is infrastructure, not playback: its previews and
       // redirects must not update history, advance the queue, or open a page.
       if (
-        source === 'player' && !ui$.playerUrl.get() &&
+        source === 'player' &&
+        !ui$.playerUrl.get() &&
         !['onload', 'play-state', '[content]', '[kotlin]', 'log'].includes(type)
-      ) return
+      )
+        return
       // The hidden webview keeps running; its chrome events would fight the
       // page the user is actually looking at.
-      const isForeground =
-        !splitWatchView || source === (ui$.playerMode.get() === 'full' ? 'player' : 'browse')
+      const isForeground = !splitWatchView || source === (ui$.playerMode.get() === 'full' ? 'player' : 'browse')
       switch (type) {
         case '[content]':
         case '[kotlin]':
@@ -985,9 +984,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
       openInPlayer(url)
     }
     // The role only reaches the page on its next load (see scriptOnStart).
-    nativeRef.current?.loadUrl(
-      settings$.isYTMusic.peek() ? 'https://music.youtube.com/' : 'https://m.youtube.com/',
-    )
+    nativeRef.current?.loadUrl(settings$.isYTMusic.peek() ? 'https://music.youtube.com/' : 'https://m.youtube.com/')
   }, [splitWatchView])
 
   useObserveEffect(settings$.hideShorts, ({ value }) => toggleShorts(value))
@@ -1080,14 +1077,16 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
   const syncProxyToSession = useCallback(() => {
     if (!isWeb) return
     const settings = settings$.get()
-    void mainClient.setProxy({
-      enabled: settings.proxyEnabled,
-      type: settings.proxyType,
-      host: settings.proxyHost,
-      port: settings.proxyPort,
-      username: settings.proxyUsername,
-      password: settings.proxyPassword,
-    }).catch(() => showToast(t('settings.proxy.applyFailed')))
+    void mainClient
+      .setProxy({
+        enabled: settings.proxyEnabled,
+        type: settings.proxyType,
+        host: settings.proxyHost,
+        port: settings.proxyPort,
+        username: settings.proxyUsername,
+        password: settings.proxyPassword,
+      })
+      .catch(() => showToast(t('settings.proxy.applyFailed')))
   }, [])
 
   useEffect(() => {
@@ -1253,8 +1252,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
                     // split tracks the browsing side.
                     const errored = splitWatchView && playerFull ? 'player' : 'browse'
                     const fallback = splitWatchView
-                      ? (errored === 'player' ? ui$.playerPageUrl.get() : ui$.browsePageUrl.get()) ||
-                        ui$.url.get()
+                      ? (errored === 'player' ? ui$.playerPageUrl.get() : ui$.browsePageUrl.get()) || ui$.url.get()
                       : ui$.url.get()
                     const url = (loadError?.canReload && loadError.url) || fallback
                     setLoadError(errored, null)

@@ -35,9 +35,14 @@ describe('mergeKeys', () => {
 
   it('uses the merger of a key', () => {
     const base = { styles: { a: true, b: true } }
-    const result = mergeKeys(base, { styles: { a: false, b: true } }, { styles: { a: true, b: false } }, {
-      styles: (b, l, r) => mergeKeys(b, l, r),
-    })
+    const result = mergeKeys(
+      base,
+      { styles: { a: false, b: true } },
+      { styles: { a: true, b: false } },
+      {
+        styles: (b, l, r) => mergeKeys(b, l, r),
+      },
+    )
     expect(result).toEqual({ value: { styles: { a: false, b: false } }, lost: false })
   })
 })

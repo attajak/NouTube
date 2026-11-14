@@ -14,7 +14,8 @@ export function extractYouTubeChannelMetadata(html: string): YouTubeChannelMetad
   const $ = cheerio.load(html)
 
   const feedUrl =
-    $('link[type="application/rss+xml"]').attr('href') || $('link[rel="alternate"][type="application/rss+xml"]').attr('href')
+    $('link[type="application/rss+xml"]').attr('href') ||
+    $('link[rel="alternate"][type="application/rss+xml"]').attr('href')
 
   let id: string | undefined
   if (feedUrl) {
@@ -29,7 +30,8 @@ export function extractYouTubeChannelMetadata(html: string): YouTubeChannelMetad
     $('link[itemprop="thumbnailUrl"]').attr('href') ||
     undefined
 
-  const rawTitle = $('meta[property="og:title"]').attr('content') || $('meta[name="title"]').attr('content') || undefined
+  const rawTitle =
+    $('meta[property="og:title"]').attr('content') || $('meta[name="title"]').attr('content') || undefined
   const title = rawTitle ? normalizeYouTubeTitle(rawTitle) : undefined
 
   return { id, thumbnail, title }

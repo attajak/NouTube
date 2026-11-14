@@ -207,8 +207,7 @@ function loadIntoPlayer(url: string) {
   let warmedHome = false
   try {
     const page = new URL(pageUrl)
-    warmedHome = page.pathname === '/' &&
-      ['m.youtube.com', 'www.youtube.com', 'youtube.com'].includes(page.host)
+    warmedHome = page.pathname === '/' && ['m.youtube.com', 'www.youtube.com', 'youtube.com'].includes(page.host)
   } catch {}
   if (isWatchUrl(pageUrl) || warmedHome) {
     try {

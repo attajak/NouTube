@@ -23,11 +23,20 @@ export function foldBookmarksByUrl(rows: Bookmark[], synced: (id: string) => boo
   const dropped = new Set<string>()
   for (const group of groups.values()) {
     if (group.length < 2) continue
-    const keeper = group.find((row) => synced(row.id)) ?? group.reduce((a, b) => (time(a.created_at) <= time(b.created_at) ? a : b))
+    const keeper =
+      group.find((row) => synced(row.id)) ?? group.reduce((a, b) => (time(a.created_at) <= time(b.created_at) ? a : b))
     const unsynced = group.filter((row) => !synced(row.id))
-    const newest = (unsynced.length ? unsynced : group).reduce((a, b) => (time(b.updated_at) > time(a.updated_at) ? b : a))
+    const newest = (unsynced.length ? unsynced : group).reduce((a, b) =>
+      time(b.updated_at) > time(a.updated_at) ? b : a,
+    )
     const createdAt = group.reduce((a, b) => (time(b.created_at) < time(a.created_at) ? b : a)).created_at
-    const kept: Bookmark = { ...keeper, title: newest.title, json: newest.json, created_at: createdAt, updated_at: newest.updated_at }
+    const kept: Bookmark = {
+      ...keeper,
+      title: newest.title,
+      json: newest.json,
+      created_at: createdAt,
+      updated_at: newest.updated_at,
+    }
     replaced.set(keeper.id, kept)
     if (JSON.stringify(kept) !== JSON.stringify(keeper)) changed.push(keeper.id)
     group.filter((row) => row !== keeper).forEach((row) => dropped.add(row.id))

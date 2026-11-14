@@ -1,4 +1,9 @@
-import { blocklistChannelsMatch, blocklistTextMatches, blocklistTextsMatch, createDefaultBlocklistSnapshot } from '../lib/blocklist'
+import {
+  blocklistChannelsMatch,
+  blocklistTextMatches,
+  blocklistTextsMatch,
+  createDefaultBlocklistSnapshot,
+} from '../lib/blocklist'
 import { noutubeBlocklistEvent } from './noutube'
 
 const blockedClass = '_nou_blocked'

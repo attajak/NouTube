@@ -14,17 +14,23 @@ describe('YouTube request authorization', () => {
   })
 
   test('signs each available SID using the request origin and timestamp', async () => {
-    expect(await getYouTubeAuthorization(origin, 'SAPISID=test=sid; __Secure-1PAPISID=first; __Secure-3PAPISID=third', now)).toBe([
-      signature('SAPISIDHASH', 'test=sid'), signature('SAPISID1PHASH', 'first'), signature('SAPISID3PHASH', 'third'),
-    ].join(' '))
+    expect(
+      await getYouTubeAuthorization(origin, 'SAPISID=test=sid; __Secure-1PAPISID=first; __Secure-3PAPISID=third', now),
+    ).toBe(
+      [
+        signature('SAPISIDHASH', 'test=sid'),
+        signature('SAPISID1PHASH', 'first'),
+        signature('SAPISID3PHASH', 'third'),
+      ].join(' '),
+    )
     expect(await getYouTubeAuthorization('https://www.youtube.com', 'SAPISID=sid', now)).toBe(
       signature('SAPISIDHASH', 'sid', 'https://www.youtube.com'),
     )
   })
 
   test('falls back to the third-party SID when SAPISID is absent', async () => {
-    expect(await getYouTubeAuthorization(origin, '__Secure-3PAPISID=third', now)).toBe([
-      signature('SAPISIDHASH', 'third'), signature('SAPISID3PHASH', 'third'),
-    ].join(' '))
+    expect(await getYouTubeAuthorization(origin, '__Secure-3PAPISID=third', now)).toBe(
+      [signature('SAPISIDHASH', 'third'), signature('SAPISID3PHASH', 'third')].join(' '),
+    )
   })
 })

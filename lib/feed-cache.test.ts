@@ -33,11 +33,7 @@ describe('limitFeedBookmarksPerChannel', () => {
   })
 
   it('keeps the newest items for each channel', () => {
-    const bookmarks = [
-      makeFeedVideo('channel-a', 0),
-      makeFeedVideo('channel-a', 1),
-      makeFeedVideo('channel-a', 2),
-    ]
+    const bookmarks = [makeFeedVideo('channel-a', 0), makeFeedVideo('channel-a', 1), makeFeedVideo('channel-a', 2)]
 
     const limited = limitFeedBookmarksPerChannel(bookmarks, 2)
 

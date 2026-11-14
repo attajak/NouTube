@@ -21,7 +21,10 @@ export function pushToast(message: string, onPress?: () => void) {
 
   const id = `${Date.now()}-${Math.random()}`
   toasts$.push({ id, message, onPress })
-  dismissTimers.set(id, setTimeout(() => dismissToast(id), TOAST_TIMEOUT_MS))
+  dismissTimers.set(
+    id,
+    setTimeout(() => dismissToast(id), TOAST_TIMEOUT_MS),
+  )
 }
 
 export function dismissToast(id: string) {

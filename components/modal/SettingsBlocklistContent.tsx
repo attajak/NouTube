@@ -46,9 +46,17 @@ const BlocklistRow: React.FC<{
   }
 
   return (
-    <View className={clsx('flex-row items-center gap-3 px-4 py-3', !isLast && 'border-b-2 border-zinc-100 dark:border-zinc-950')}>
+    <View
+      className={clsx(
+        'flex-row items-center gap-3 px-4 py-3',
+        !isLast && 'border-b-2 border-zinc-100 dark:border-zinc-950',
+      )}
+    >
       <Pressable onPress={toggle} className="flex-1">
-        <NouText className={clsx('font-medium', !entry.enabled && 'text-zinc-500 dark:text-zinc-500')} numberOfLines={1}>
+        <NouText
+          className={clsx('font-medium', !entry.enabled && 'text-zinc-500 dark:text-zinc-500')}
+          numberOfLines={1}
+        >
           {entry.value}
         </NouText>
       </Pressable>
@@ -61,7 +69,10 @@ const BlocklistRow: React.FC<{
           {...(isWeb ? { activeThumbColor: tw('blue-50') } : {})}
         />
       </View>
-      <Pressable onPress={remove} className="h-10 w-10 items-center justify-center rounded-full active:bg-zinc-200 dark:active:bg-zinc-800">
+      <Pressable
+        onPress={remove}
+        className="h-10 w-10 items-center justify-center rounded-full active:bg-zinc-200 dark:active:bg-zinc-800"
+      >
         <MaterialIcons name="delete-outline" size={20} color={isDark ? tw('zinc-300') : tw('slate-600')} />
       </Pressable>
     </View>
@@ -111,7 +122,12 @@ const BlocklistSection: React.FC<{
           </NouButton>
         </View>
 
-        <View className={clsx('flex-row gap-3 px-4 py-3 bg-zinc-50/70 dark:bg-zinc-950/30', entries.length > 0 && rowDividerCls)}>
+        <View
+          className={clsx(
+            'flex-row gap-3 px-4 py-3 bg-zinc-50/70 dark:bg-zinc-950/30',
+            entries.length > 0 && rowDividerCls,
+          )}
+        >
           <MaterialIcons name="info-outline" color={isDark ? tw('zinc-400') : tw('slate-500')} size={18} />
           <NouText className="flex-1 text-sm leading-5 text-zinc-600 dark:text-zinc-400">{note}</NouText>
         </View>

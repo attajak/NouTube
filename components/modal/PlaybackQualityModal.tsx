@@ -29,7 +29,10 @@ export const PlaybackQualityModal = () => {
   }
 
   return (
-    <BaseCenterModal onClose={() => ui$.playbackQualityModalOpen.set(false)} containerClassName="w-[24rem] max-w-[88vw]">
+    <BaseCenterModal
+      onClose={() => ui$.playbackQualityModalOpen.set(false)}
+      containerClassName="w-[24rem] max-w-[88vw]"
+    >
       <View className="p-6">
         <NouText className="text-lg font-semibold text-center">{t('modals.playbackQuality')}</NouText>
         <View className="mt-6 flex-row flex-wrap justify-center gap-x-3 gap-y-4">

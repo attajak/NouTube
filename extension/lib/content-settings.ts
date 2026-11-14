@@ -30,4 +30,6 @@ export const getContentSettings = (settings: RawSettings): ContentSettings => ({
 export const getHideShorts = (settings: RawSettings) => bool(settings?.hideShorts, true)
 export const getPreferH264 = (settings: RawSettings) => bool(settings?.preferH264)
 export const getClickbaitThumbnail = (settings: RawSettings) =>
-  ['hq1', 'hq2', 'hq3'].includes(settings?.clickbaitThumbnail || '') ? (settings!.clickbaitThumbnail as string) : 'default'
+  ['hq1', 'hq2', 'hq3'].includes(settings?.clickbaitThumbnail || '')
+    ? (settings!.clickbaitThumbnail as string)
+    : 'default'

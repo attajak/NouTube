@@ -28,13 +28,9 @@ export const requireEnv = (name: string) => {
   return value
 }
 
-export const packageInfo = async (): Promise<PackageInfo> => (
-  await Bun.file(resolve(repoRoot, 'package.json')).json()
-)
+export const packageInfo = async (): Promise<PackageInfo> => await Bun.file(resolve(repoRoot, 'package.json')).json()
 
-export const fileExists = async (path: string) => (
-  await Bun.file(path).exists()
-)
+export const fileExists = async (path: string) => await Bun.file(path).exists()
 
 export const ensureFile = async (path: string, message: string) => {
   if (!(await fileExists(path))) {

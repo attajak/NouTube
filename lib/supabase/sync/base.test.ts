@@ -185,7 +185,9 @@ describe('RowSyncer', () => {
     const device = new TestRowSyncer(server)
     // As synced by the old whole-collection sync: the server's copies, then 'one' renamed here and
     // never pushed. The upgrade leaves no pending ids behind.
-    device.rows = server.read().map((item) => (item.id === 'one' ? { ...item, title: 'renamed', updated_at: at(500) } : item))
+    device.rows = server
+      .read()
+      .map((item) => (item.id === 'one' ? { ...item, title: 'renamed', updated_at: at(500) } : item))
 
     await device.syncNow()
 

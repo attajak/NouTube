@@ -54,9 +54,11 @@ export function extractInitialData(html: string): unknown {
   if (literal.startsWith("'") && literal.endsWith("'")) {
     // One pass, so an escaped backslash is never read as the start of another escape.
     return parseJson(
-      literal.slice(1, -1).replace(/\\(x[0-9a-fA-F]{2}|[\s\S])/g, (_match, escape: string) =>
-        escape.length === 3 ? String.fromCharCode(parseInt(escape.slice(1), 16)) : escape,
-      ),
+      literal
+        .slice(1, -1)
+        .replace(/\\(x[0-9a-fA-F]{2}|[\s\S])/g, (_match, escape: string) =>
+          escape.length === 3 ? String.fromCharCode(parseInt(escape.slice(1), 16)) : escape,
+        ),
     )
   }
 

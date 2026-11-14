@@ -72,46 +72,48 @@ export const mergeKeys = <T extends object>(
  * on one side and left as it was on the other goes. The order is the other device's, then what
  * was added here. Items of the same key after the first are dropped.
  */
-export const mergeList = <T>(keyOf: (item: T) => string): Merger<T[]> => (base, local, remote) => {
-  const index = (items: T[] | undefined) => {
-    const map = new Map<string, T>()
-    for (const item of items ?? []) {
-      const key = keyOf(item)
-      if (!map.has(key)) map.set(key, item)
+export const mergeList =
+  <T>(keyOf: (item: T) => string): Merger<T[]> =>
+  (base, local, remote) => {
+    const index = (items: T[] | undefined) => {
+      const map = new Map<string, T>()
+      for (const item of items ?? []) {
+        const key = keyOf(item)
+        if (!map.has(key)) map.set(key, item)
+      }
+      return map
     }
-    return map
-  }
-  const baseItems = index(base)
-  const localItems = index(local)
-  const remoteItems = index(remote)
-  const value: T[] = []
-  let lost = false
+    const baseItems = index(base)
+    const localItems = index(local)
+    const remoteItems = index(remote)
+    const value: T[] = []
+    let lost = false
 
-  for (const [key, remoteItem] of remoteItems) {
-    const localItem = localItems.get(key)
-    const baseItem = baseItems.get(key)
-    if (localItem === undefined) {
-      // Taken away here: it goes unless the other device changed it meanwhile.
-      if (baseItem !== undefined && same(baseItem, remoteItem)) continue
-      if (baseItem !== undefined) lost = true
-      value.push(remoteItem)
-      continue
+    for (const [key, remoteItem] of remoteItems) {
+      const localItem = localItems.get(key)
+      const baseItem = baseItems.get(key)
+      if (localItem === undefined) {
+        // Taken away here: it goes unless the other device changed it meanwhile.
+        if (baseItem !== undefined && same(baseItem, remoteItem)) continue
+        if (baseItem !== undefined) lost = true
+        value.push(remoteItem)
+        continue
+      }
+      const result = mergeValue(baseItem, localItem, remoteItem)
+      lost ||= result.lost
+      value.push(result.value)
     }
-    const result = mergeValue(baseItem, localItem, remoteItem)
-    lost ||= result.lost
-    value.push(result.value)
-  }
 
-  for (const [key, localItem] of localItems) {
-    if (remoteItems.has(key)) continue
-    const baseItem = baseItems.get(key)
-    if (baseItem === undefined) {
-      value.push(localItem)
-    } else if (!same(baseItem, localItem)) {
-      // Changed here, taken away on the other device: it stays taken away.
-      lost = true
+    for (const [key, localItem] of localItems) {
+      if (remoteItems.has(key)) continue
+      const baseItem = baseItems.get(key)
+      if (baseItem === undefined) {
+        value.push(localItem)
+      } else if (!same(baseItem, localItem)) {
+        // Changed here, taken away on the other device: it stays taken away.
+        lost = true
+      }
     }
-  }
 
-  return { value, lost }
-}
+    return { value, lost }
+  }

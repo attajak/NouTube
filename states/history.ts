@@ -33,8 +33,7 @@ interface Store {
 // The same video watched on YouTube and on YouTube Music is two entries: the
 // modal splits the list by home, so keying on the video id alone would let one
 // take the other's url over and disappear from the list it was in.
-const getKey = (entry: Pick<History, 'videoId' | 'url'>) =>
-  `${entry.videoId}|${getPageType(entry.url)?.home || ''}`
+const getKey = (entry: Pick<History, 'videoId' | 'url'>) => `${entry.videoId}|${getPageType(entry.url)?.home || ''}`
 
 export const history$ = observable<Store>({
   bookmarks: [],

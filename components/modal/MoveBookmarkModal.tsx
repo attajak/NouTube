@@ -97,7 +97,11 @@ export const MoveBookmarkModal = () => {
                     selected && 'bg-indigo-50 dark:bg-zinc-800',
                   )}
                 >
-                  <MaterialIcons name={item.id === NEW_FOLDER_ID ? 'create-new-folder' : 'folder'} size={22} color={tw('zinc-400')} />
+                  <MaterialIcons
+                    name={item.id === NEW_FOLDER_ID ? 'create-new-folder' : 'folder'}
+                    size={22}
+                    color={tw('zinc-400')}
+                  />
                   <NouText className={clsx('flex-1', selected && 'font-semibold')}>{item.name}</NouText>
                   {nIf(selected, <MaterialIcons name="check" size={22} color={tw('indigo-500')} />)}
                 </Pressable>

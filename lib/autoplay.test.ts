@@ -8,15 +8,30 @@ function page(initial = true, attribute = 'aria-pressed') {
   const values = new Map<string, string>()
   const storage = {
     getItem: (key: string) => values.get(key) ?? null,
-    setItem: (key: string, value: string) => { values.set(key, value) },
-    removeItem: (key: string) => { values.delete(key) },
+    setItem: (key: string, value: string) => {
+      values.set(key, value)
+    },
+    removeItem: (key: string) => {
+      values.delete(key)
+    },
   }
   const toggle = {
-    getAttribute: (key: string) => key === attribute ? String(enabled) : null,
-    click: () => { enabled = !enabled; calls.push(enabled) },
+    getAttribute: (key: string) => (key === attribute ? String(enabled) : null),
+    click: () => {
+      enabled = !enabled
+      calls.push(enabled)
+    },
   }
-  const root = { querySelectorAll: () => mounted ? [toggle] : [] } as unknown as Document
-  return { root, storage, calls, values, mount: (value: boolean) => { mounted = value } }
+  const root = { querySelectorAll: () => (mounted ? [toggle] : []) } as unknown as Document
+  return {
+    root,
+    storage,
+    calls,
+    values,
+    mount: (value: boolean) => {
+      mounted = value
+    },
+  }
 }
 
 describe('recommendation autoplay policy', () => {
@@ -24,18 +39,20 @@ describe('recommendation autoplay policy', () => {
     it(`uses the native ${attribute} toggle and restores the original preference`, () => {
       const clock = spyOn(Date, 'now').mockReturnValue(10000)
       try {
-      const p = page(true, attribute)
-      applyAutoplayPolicy(p.root, p.storage, false)
-      expect(p.calls).toEqual([])
-      applyAutoplayPolicy(p.root, p.storage, true)
-      applyAutoplayPolicy(p.root, p.storage, true)
-      expect(p.calls).toEqual([false])
-      clock.mockReturnValue(12000)
-      applyAutoplayPolicy(p.root, p.storage, false)
-      applyAutoplayPolicy(p.root, p.storage, false)
-      expect(p.calls).toEqual([false, true])
-      expect(p.values.size).toBe(0)
-      } finally { clock.mockRestore() }
+        const p = page(true, attribute)
+        applyAutoplayPolicy(p.root, p.storage, false)
+        expect(p.calls).toEqual([])
+        applyAutoplayPolicy(p.root, p.storage, true)
+        applyAutoplayPolicy(p.root, p.storage, true)
+        expect(p.calls).toEqual([false])
+        clock.mockReturnValue(12000)
+        applyAutoplayPolicy(p.root, p.storage, false)
+        applyAutoplayPolicy(p.root, p.storage, false)
+        expect(p.calls).toEqual([false, true])
+        expect(p.values.size).toBe(0)
+      } finally {
+        clock.mockRestore()
+      }
     })
   }
 
@@ -67,7 +84,12 @@ describe('recommendation autoplay policy', () => {
 
   it('does not repeatedly click a control that ignores clicks', () => {
     let clicks = 0
-    const toggle = { getAttribute: () => 'true', click: () => { clicks++ } }
+    const toggle = {
+      getAttribute: () => 'true',
+      click: () => {
+        clicks++
+      },
+    }
     const root = { querySelectorAll: () => [toggle] } as unknown as Document
     const p = page()
     applyAutoplayPolicy(root, p.storage, true)

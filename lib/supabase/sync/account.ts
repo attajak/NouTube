@@ -59,7 +59,12 @@ const keepAccountDocument = <T>(syncer: DocumentSyncer<T>, remote: RemoteDocumen
 }
 
 const fetchAccountData = () =>
-  Promise.all([settingsSyncer.fetchRemote(), userStylesSyncer.fetchRemote(), bookmarksSyncer.fetchRows(), foldersSyncer.fetchRows()])
+  Promise.all([
+    settingsSyncer.fetchRemote(),
+    userStylesSyncer.fetchRemote(),
+    bookmarksSyncer.fetchRows(),
+    foldersSyncer.fetchRows(),
+  ])
 
 /**
  * This device's folders and bookmarks added to an account. Row ids are unique across accounts, so
@@ -75,7 +80,9 @@ export function mergeDeviceRows(
 ) {
   const now = new Date()
   const folderKey = (folder: Folder) => `${folder.json.tab}\n${folder.name}`
-  const accountFolders = new Map(remoteFolders.filter((row) => !row.json.deleted).map((row) => [folderKey(row), row.id]))
+  const accountFolders = new Map(
+    remoteFolders.filter((row) => !row.json.deleted).map((row) => [folderKey(row), row.id]),
+  )
   const folderIds = new Map<string, string>()
   const addedFolders: Folder[] = []
   for (const folder of localFolders) {

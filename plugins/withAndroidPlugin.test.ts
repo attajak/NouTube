@@ -35,12 +35,14 @@ describe('Android display metrics compatibility', () => {
 
   for (const hasDesktopMode of [false, true]) {
     it(`migrates an older activity ${hasDesktopMode ? 'with' : 'without'} desktop-mode notifications`, async () => {
-      const result = await applyMainActivity(activity(`
+      const result = await applyMainActivity(
+        activity(`
   private fun syncDisplayMetricsToCurrentDisplay() {
     ${screenMetrics}
     ${windowMetrics}
     ${hasDesktopMode ? desktopMode : ''}
-  }`))
+  }`),
+      )
       expect(result).not.toContain(windowMetrics)
       expect(result.split(screenMetrics)).toHaveLength(2)
       expect(result.split(desktopMode)).toHaveLength(2)
@@ -65,8 +67,9 @@ it('enables extraction through Gradle packaging and replaces an existing false v
   }
   const mod = config.mods!.android!.gradleProperties!
   const result = await mod(input)
-  expect(result.modResults.filter((item) => item.type === 'property' && item.key === 'expo.useLegacyPackaging'))
-    .toEqual([{ type: 'property', key: 'expo.useLegacyPackaging', value: 'true' }])
+  expect(
+    result.modResults.filter((item) => item.type === 'property' && item.key === 'expo.useLegacyPackaging'),
+  ).toEqual([{ type: 'property', key: 'expo.useLegacyPackaging', value: 'true' }])
   const firstRun = structuredClone(result.modResults)
   expect((await mod(result)).modResults).toEqual(firstRun)
 })

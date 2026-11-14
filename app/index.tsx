@@ -16,7 +16,11 @@ import { syncNativeSettings } from '@/lib/native-settings'
 import { sleepTimer$ } from '@/states/sleep-timer'
 import { showToast } from '@/lib/toast'
 import { t } from 'i18next'
-import { addSleepTimerListener, getNativeSleepTimerRemainingMs, hasSleepTimerNativeSupport } from '@/lib/sleep-timer-native'
+import {
+  addSleepTimerListener,
+  getNativeSleepTimerRemainingMs,
+  hasSleepTimerNativeSupport,
+} from '@/lib/sleep-timer-native'
 
 // The activity can be recreated while the process (and this JS runtime) stays
 // alive on the media service, so the launch intent has to be read on every

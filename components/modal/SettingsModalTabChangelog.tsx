@@ -40,7 +40,9 @@ export const SettingsChangelogContent = () => {
     return (
       <View className="gap-4">
         <View className={surfaceCls}>
-          <NouText className="px-4 py-4 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{t('changelog.error')}</NouText>
+          <NouText className="px-4 py-4 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+            {t('changelog.error')}
+          </NouText>
         </View>
         <View className="items-end">
           <NouButton variant="outline" loading={isFetching} onPress={() => void refetch()}>
@@ -102,7 +104,9 @@ export const SettingsChangelogContent = () => {
                       </View>
                     ))
                   ) : (
-                    <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">{t('changelog.noNotes')}</NouText>
+                    <NouText className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                      {t('changelog.noNotes')}
+                    </NouText>
                   )}
                 </View>
               </View>

@@ -23,9 +23,5 @@ export function WebviewContainer({
     }
   }, [headerPosition, animatedInset])
 
-  return (
-    <Animated.View style={[{ flex: 1 }, animatedStyle]}>
-      {children}
-    </Animated.View>
-  )
+  return <Animated.View style={[{ flex: 1 }, animatedStyle]}>{children}</Animated.View>
 }

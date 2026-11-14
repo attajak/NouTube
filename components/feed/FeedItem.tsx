@@ -77,19 +77,23 @@ export const FeedItem: React.FC<{
         <NouMenu
           trigger={isWeb ? <MaterialButton name="more-vert" size={20} /> : isIos ? 'ellipsis' : 'filled.MoreVert'}
           items={[
-            ...(isPost ? [] : [{
-              label: starred ? t('menus.unstar') : t('menus.star'),
-              icon: <MaterialIcons name={starred ? 'star' : 'star-outline'} size={18} color={iconColor} />,
-              systemImage: starred ? 'star.slash' : 'star',
-              handler: () =>
-                bookmarks$.toggleBookmark(
-                  newBookmark({
-                    url: starUrl,
-                    title: bookmark.title,
-                    json: { thumbnail: bookmark.json?.thumbnail },
-                  }),
-                ),
-            }]),
+            ...(isPost
+              ? []
+              : [
+                  {
+                    label: starred ? t('menus.unstar') : t('menus.star'),
+                    icon: <MaterialIcons name={starred ? 'star' : 'star-outline'} size={18} color={iconColor} />,
+                    systemImage: starred ? 'star.slash' : 'star',
+                    handler: () =>
+                      bookmarks$.toggleBookmark(
+                        newBookmark({
+                          url: starUrl,
+                          title: bookmark.title,
+                          json: { thumbnail: bookmark.json?.thumbnail },
+                        }),
+                      ),
+                  },
+                ]),
             ...(isIos || isPost
               ? []
               : [

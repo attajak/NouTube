@@ -36,9 +36,7 @@ describe('buildFormatOptionsFromPlayer', () => {
   })
 
   test('labels a video variant by resolution, frame rate and codec', () => {
-    const result = buildFormatOptionsFromPlayer(
-      payload([video(303, 1080, 'vp09.00.40.08', { fps: 60, ext: 'webm' })]),
-    )
+    const result = buildFormatOptionsFromPlayer(payload([video(303, 1080, 'vp09.00.40.08', { fps: 60, ext: 'webm' })]))
     const option = result?.formats.find((opt) => opt.advanced)
     expect(option?.label).toBe('1080p60 VP9')
     expect(option?.description).toBe('WEBM · ~10 MB')

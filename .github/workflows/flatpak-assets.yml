@@ -33,15 +33,15 @@ jobs:
         if: matrix.arch == 'arm64'
         uses: docker/setup-qemu-action@v3
         with:
-            platforms: linux/arm64
+          platforms: linux/arm64
 
       - name: install
         if: matrix.arch == 'arm64'
         run: |
-            docker run --rm --platform ${{ matrix.platform }} \
-              -v "$(pwd):/work" -w /work \
-              oven/bun:1 \
-              /bin/bash -c "bun link && bun install"
+          docker run --rm --platform ${{ matrix.platform }} \
+            -v "$(pwd):/work" -w /work \
+            oven/bun:1 \
+            /bin/bash -c "bun link && bun install"
 
       - name: zip source and node_modules
         run: |

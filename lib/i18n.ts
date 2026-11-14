@@ -20,7 +20,25 @@ import zhHansText from '@/locales/zh_Hans.json'
 import zhHantText from '@/locales/zh_Hant.json'
 import type { Locale } from 'expo-localization'
 
-export const supportedI18nLanguages = ['de', 'en', 'es', 'fr', 'gl', 'id', 'it', 'ja', 'pl', 'pt', 'pt_BR', 'ru', 'tr', 'uk', 'vi', 'zh_Hans', 'zh_Hant'] as const
+export const supportedI18nLanguages = [
+  'de',
+  'en',
+  'es',
+  'fr',
+  'gl',
+  'id',
+  'it',
+  'ja',
+  'pl',
+  'pt',
+  'pt_BR',
+  'ru',
+  'tr',
+  'uk',
+  'vi',
+  'zh_Hans',
+  'zh_Hant',
+] as const
 export type SupportedI18nLanguage = (typeof supportedI18nLanguages)[number]
 
 export const i18nLanguageNativeNames: Record<SupportedI18nLanguage, string> = {
@@ -114,9 +132,7 @@ export const resolveI18nLanguageFromExpoLocale = (locale?: Locale): SupportedI18
   }
 
   if (locale.languageCode === 'pt') {
-    const isBR =
-      locale.regionCode?.toLowerCase() === 'br' ||
-      locale.languageTag?.toLowerCase().includes('br')
+    const isBR = locale.regionCode?.toLowerCase() === 'br' || locale.languageTag?.toLowerCase().includes('br')
     return isBR ? 'pt_BR' : 'pt'
   }
 

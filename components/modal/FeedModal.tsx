@@ -1,4 +1,13 @@
-import { ActivityIndicator, BackHandler, FlatList, Pressable, TextInput, View, useColorScheme, useWindowDimensions } from 'react-native'
+import {
+  ActivityIndicator,
+  BackHandler,
+  FlatList,
+  Pressable,
+  TextInput,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native'
 import { NouText } from '../NouText'
 import { useEffect, useState } from 'react'
 import { clsx, isWeb, nIf } from '@/lib/utils'
@@ -211,7 +220,9 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
   const currentFilterThumbnail = currentFilter?.thumbnail
   const currentOrderLabel = sort === 'lastVideo' ? t('feeds.sortLastVideo') : t('feeds.sortFrequency')
   const currentChannelBookmark =
-    parsedFilter.kind === 'channel' ? savedChannelBookmarks.find((bookmark) => bookmark.id === parsedFilter.id) : undefined
+    parsedFilter.kind === 'channel'
+      ? savedChannelBookmarks.find((bookmark) => bookmark.id === parsedFilter.id)
+      : undefined
 
   const handleRefreshCurrentChannel = async () => {
     if (!currentChannelBookmark || isRefreshingCurrentChannel) {
@@ -283,14 +294,16 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
               },
             ] as FeedEmptyStateAction[],
           }
-      : {
-          icon: 'hourglass-empty',
-          title: t('feeds.emptyTitleWaiting'),
-          body: t('feeds.emptyBodyWaiting'),
-          actions: [] as FeedEmptyStateAction[],
-        }
+        : {
+            icon: 'hourglass-empty',
+            title: t('feeds.emptyTitleWaiting'),
+            body: t('feeds.emptyBodyWaiting'),
+            actions: [] as FeedEmptyStateAction[],
+          }
 
-  const renderFilterAvatar = (option: Pick<FeedFilterOption, 'icon' | 'thumbnail'> | Pick<FeedMenuItem, 'icon' | 'thumbnail'>) => {
+  const renderFilterAvatar = (
+    option: Pick<FeedFilterOption, 'icon' | 'thumbnail'> | Pick<FeedMenuItem, 'icon' | 'thumbnail'>,
+  ) => {
     if (option.thumbnail) {
       return <Image source={option.thumbnail} contentFit="cover" style={{ width: 18, height: 18, borderRadius: 9 }} />
     }
@@ -363,7 +376,8 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
   const visibleMenuItems =
     activeMenu === 'folder' && normalizedFilterMenuQuery
       ? menuItems.filter(
-          (item) => item.key === ALL_FEED_FILTER_KEY || item.label.toLocaleLowerCase().includes(normalizedFilterMenuQuery),
+          (item) =>
+            item.key === ALL_FEED_FILTER_KEY || item.label.toLocaleLowerCase().includes(normalizedFilterMenuQuery),
         )
       : menuItems
 
@@ -441,7 +455,9 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
                   />
                 </View>
                 <NouText className="text-center text-base font-semibold">{updatesEmptyState.title}</NouText>
-                <NouText className="mt-2 text-center text-sm leading-6 text-zinc-600 dark:text-zinc-400">{updatesEmptyState.body}</NouText>
+                <NouText className="mt-2 text-center text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                  {updatesEmptyState.body}
+                </NouText>
                 {updatesEmptyState.actions.length ? (
                   <View className="mt-5 flex-row flex-wrap items-center justify-center gap-2">
                     {updatesEmptyState.actions.map((action) => (
@@ -451,7 +467,9 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
                         disabled={action.disabled}
                         className={clsx(
                           'rounded-full border px-4 py-2',
-                          action.tone === 'accent' ? 'border-orange-700 bg-orange-500/10' : 'border-zinc-300 dark:border-zinc-700 bg-zinc-200 dark:bg-zinc-800',
+                          action.tone === 'accent'
+                            ? 'border-orange-700 bg-orange-500/10'
+                            : 'border-zinc-300 dark:border-zinc-700 bg-zinc-200 dark:bg-zinc-800',
                           action.disabled && 'opacity-60',
                         )}
                       >
@@ -497,7 +515,9 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
           ListEmptyComponent={
             <View className="px-6 py-12">
               <NouText className="text-center text-zinc-600 dark:text-zinc-400">
-                {managementItems.length && parsedFilter.kind !== 'all' ? t('feeds.manageNoResults') : t('feeds.manageEmpty')}
+                {managementItems.length && parsedFilter.kind !== 'all'
+                  ? t('feeds.manageNoResults')
+                  : t('feeds.manageEmpty')}
               </NouText>
             </View>
           }
@@ -509,7 +529,11 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
           <Pressable className="absolute inset-0" onPress={() => setActiveMenu(undefined)} />
           {activeMenu === 'folder' ? (
             <View
-              className={isWeb ? 'absolute right-3 top-[68px] w-[320px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900' : 'absolute right-3 top-[68px] w-[320px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'}
+              className={
+                isWeb
+                  ? 'absolute right-3 top-[68px] w-[320px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'
+                  : 'absolute right-3 top-[68px] w-[320px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'
+              }
               style={{ top: MENU_TOP, maxHeight: 420 }}
             >
               {shouldShowFilterInput ? (
@@ -539,32 +563,50 @@ export const FeedContent: React.FC<{ showClose?: boolean; onClose?: () => void; 
                     <View className="flex-row items-center gap-3">
                       {renderFilterAvatar(item)}
                       <NouText className="flex-1">{item.label}</NouText>
-                      {item.selected ? <MaterialIcons name="check" color={iconColor} size={16} /> : <View className="w-4" />}
+                      {item.selected ? (
+                        <MaterialIcons name="check" color={iconColor} size={16} />
+                      ) : (
+                        <View className="w-4" />
+                      )}
                     </View>
                   </Pressable>
                 )}
                 ListEmptyComponent={
                   <View className="px-4 py-6">
-                    <NouText className="text-center text-zinc-600 dark:text-zinc-400">{t('feeds.filterDropdownEmpty')}</NouText>
+                    <NouText className="text-center text-zinc-600 dark:text-zinc-400">
+                      {t('feeds.filterDropdownEmpty')}
+                    </NouText>
                   </View>
                 }
               />
             </View>
           ) : (
             <View
-              className={isWeb ? 'absolute right-3 top-[68px] w-[280px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900' : 'absolute right-3 top-[68px] w-[280px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'}
+              className={
+                isWeb
+                  ? 'absolute right-3 top-[68px] w-[280px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'
+                  : 'absolute right-3 top-[68px] w-[280px] overflow-hidden rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900'
+              }
               style={{ top: MENU_TOP }}
             >
               {visibleMenuItems.map((item, index) => (
                 <Pressable
                   key={item.key}
                   onPress={item.onPress}
-                  className={index < visibleMenuItems.length - 1 ? 'border-b-2 border-zinc-100 dark:border-zinc-950 px-4 py-3 active:bg-zinc-200 dark:active:bg-zinc-800' : 'px-4 py-3 active:bg-zinc-200 dark:active:bg-zinc-800'}
+                  className={
+                    index < visibleMenuItems.length - 1
+                      ? 'border-b-2 border-zinc-100 dark:border-zinc-950 px-4 py-3 active:bg-zinc-200 dark:active:bg-zinc-800'
+                      : 'px-4 py-3 active:bg-zinc-200 dark:active:bg-zinc-800'
+                  }
                 >
                   <View className="flex-row items-center gap-3">
                     <MaterialIcons name={item.icon as any} color={iconColor} size={16} />
                     <NouText className="flex-1">{item.label}</NouText>
-                    {item.selected ? <MaterialIcons name="check" color={iconColor} size={16} /> : <View className="w-4" />}
+                    {item.selected ? (
+                      <MaterialIcons name="check" color={iconColor} size={16} />
+                    ) : (
+                      <View className="w-4" />
+                    )}
                   </View>
                 </Pressable>
               ))}

@@ -8,14 +8,20 @@ import path from 'node:path'
 const ROOM_DATABASE_KEEP_RULE = '-keep class * extends androidx.room.RoomDatabase { public <init>(); }'
 
 const withRoomDatabaseKeepRule: ConfigPlugin = (config) =>
-  withDangerousMod(config, ['android', async (config) => {
-    const rulesPath = path.join(config.modRequest.platformProjectRoot, 'app/proguard-rules.pro')
-    const contents = await readFile(rulesPath, 'utf8')
-    if (!contents.includes(ROOM_DATABASE_KEEP_RULE)) {
-      await writeFile(rulesPath, `${contents}\n# Room databases are instantiated by reflection.\n${ROOM_DATABASE_KEEP_RULE}\n`)
-    }
-    return config
-  }])
+  withDangerousMod(config, [
+    'android',
+    async (config) => {
+      const rulesPath = path.join(config.modRequest.platformProjectRoot, 'app/proguard-rules.pro')
+      const contents = await readFile(rulesPath, 'utf8')
+      if (!contents.includes(ROOM_DATABASE_KEEP_RULE)) {
+        await writeFile(
+          rulesPath,
+          `${contents}\n# Room databases are instantiated by reflection.\n${ROOM_DATABASE_KEEP_RULE}\n`,
+        )
+      }
+      return config
+    },
+  ])
 
 // React Native seeds DisplayMetricsHolder from the *application* context
 // (ReactRootView.init, ReactHostImpl.onConfigurationChanged), which always

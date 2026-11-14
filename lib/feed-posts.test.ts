@@ -64,7 +64,12 @@ describe('extractCommunityPosts', () => {
         post('B', '2 days ago', {
           backstageAttachment: {
             backstageImageRenderer: {
-              image: { thumbnails: [{ url: '//img/small', width: 100 }, { url: '//img/big', width: 400 }] },
+              image: {
+                thumbnails: [
+                  { url: '//img/small', width: 100 },
+                  { url: '//img/big', width: 400 },
+                ],
+              },
             },
           },
         }),
@@ -93,7 +98,9 @@ describe('extractCommunityPosts', () => {
             postId: 'C',
             content: { runs: [{ text: 'look at this' }] },
             publishedTimeText: { runs: [{ text: '3 days ago' }] },
-            originalPost: { backstagePostRenderer: { postId: 'D', publishedTimeText: { runs: [{ text: '4 days ago' }] } } },
+            originalPost: {
+              backstagePostRenderer: { postId: 'D', publishedTimeText: { runs: [{ text: '4 days ago' }] } },
+            },
           },
         },
       ],

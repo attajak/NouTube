@@ -55,15 +55,13 @@ export function installClickbaitThumbnails(target: string) {
         if (next !== current) img.setAttribute('src', next)
       }
     })
-    document
-      .querySelectorAll<HTMLElement>('[style*="ytimg.com"]')
-      .forEach((el) => {
-        const s = el.getAttribute('style')
-        if (s) {
-          const next = transformStyle(s, target)
-          if (next !== s) el.setAttribute('style', next)
-        }
-      })
+    document.querySelectorAll<HTMLElement>('[style*="ytimg.com"]').forEach((el) => {
+      const s = el.getAttribute('style')
+      if (s) {
+        const next = transformStyle(s, target)
+        if (next !== s) el.setAttribute('style', next)
+      }
+    })
   }
 
   if (document.body) sweep()

@@ -140,7 +140,6 @@ describe('closePlayer', () => {
   })
 })
 
-
 describe('openInPlayer', () => {
   beforeEach(() => {
     settings$.miniPlayer.set(true)
@@ -186,7 +185,6 @@ describe('openInPlayer', () => {
     expect(player.startScripts[0]).toBeUndefined()
   })
 })
-
 
 describe('player warmup', () => {
   beforeEach(() => {
@@ -255,18 +253,15 @@ describe('player warmup', () => {
     setSplitPageUrl('player', 'https://www.youtube.com/')
     openInPlayer('https://m.youtube.com/watch?v=first12345')
     await Promise.resolve()
-    expect(player.loaded).toEqual([
-      'https://m.youtube.com/', 'https://m.youtube.com/watch?v=first12345',
-    ])
+    expect(player.loaded).toEqual(['https://m.youtube.com/', 'https://m.youtube.com/watch?v=first12345'])
   })
 
   it('cancels a warmup retry when the first video is opened', async () => {
     const player = fakePlayer()
     const retryingPlayer = {
       ...player,
-      loadUrl: (url: string) => url === 'https://m.youtube.com/'
-        ? Promise.reject(new Error('View not attached'))
-        : player.loadUrl(url),
+      loadUrl: (url: string) =>
+        url === 'https://m.youtube.com/' ? Promise.reject(new Error('View not attached')) : player.loadUrl(url),
     }
     setPlayerWebview(retryingPlayer)
     warmPlayerWebview()
