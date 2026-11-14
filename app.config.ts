@@ -18,7 +18,7 @@ const intentFilters = [
 export default ({ config }: { config: ExpoConfig }): ExpoConfig => {
   return {
     ...config, // Preserves any default config passed by Expo
-    name: 'NouTube_dev',
+    name: 'NouTube',
     slug: 'noutube',
     version,
     icon: './assets/images/icon.png',

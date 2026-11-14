@@ -7,15 +7,27 @@
     "development": {
       "credentialsSource": "remote",
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleFullDebug"
+      },
+      "bun": "1.4.4"
     },
     "preview": {
       "credentialsSource": "remote",
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleFullDebug"
+      },
+      "bun": "1.4.4"
     },
     "production": {
       "credentialsSource": "remote",
       "autoIncrement": true
+      "android": {
+         "gradleCommand": ":assembleFullRelease"
+      },
+      "bun": "1.4.4"
     }
   },
   "submit": {
