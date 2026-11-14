@@ -1,8 +1,4 @@
 {
-  "workspaces": [
-    "desktop",
-    "extension"
-  ],
   "name": "noutube",
   "private": true,
   "main": "index.js",
