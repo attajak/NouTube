@@ -47,5 +47,5 @@ fastlane/Preview.html
 fastlane/metadata/ios/en-US/release_notes.txt
 
 # Agent skills
-.agents
-skills-lock.json
+.agents/
+#skills-lock.json
