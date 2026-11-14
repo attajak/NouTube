@@ -1,25 +1,20 @@
 {
   "cli": {
     "version": ">= 27.5.0",
-    "appVersionSource": "remote"
+    "appVersionSource": "local",
+    "requireCommit": true
   },
   "build": {
     "development": {
       "credentialsSource": "remote",
       "developmentClient": true,
       "distribution": "internal",
-      "android": {
-        "gradleCommand": ":assembleFullDebug"
-      },
-      "bun": "1.4.4"
+      "extends": "production"
     },
     "preview": {
       "credentialsSource": "remote",
       "distribution": "internal",
-      "android": {
-        "gradleCommand": ":assembleFullRelease"
-      },
-      "bun": "1.4.4"
+      "extends": "production"
     },
     "production": {
       "credentialsSource": "remote",
@@ -27,7 +22,8 @@
       "android": {
         "gradleCommand": ":assembleFullRelease"
       },
-      "bun": "1.4.4"
+      "bun": "1.4.4",
+      "node": "24.22.3"
     }
   },
   "submit": {
