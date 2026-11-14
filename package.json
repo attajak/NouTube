@@ -21,7 +21,7 @@
     "test:sync:local": "bun scripts/test-sync-local.ts"
   },
   "dependencies": {
-    "noutube": "link:.",
+    "noutube": "link:noutube",
     "@expo/ui": "~58.0.28",
     "@legendapp/state": "^3.0.0-beta.48",
     "@material/material-color-utilities": "^0.4.0",
