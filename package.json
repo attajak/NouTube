@@ -19,7 +19,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test:sync:local": "bun scripts/test-sync-local.ts",
-    "eas-build-preview": "bunx eas-cli@latest build -e preview -p android"
+    "eas-build-preview": "bunx eas-cli@latest build -e preview -p android",
+    "prebuild": "bun expo prebuild -p android --clean --no-install"
   },
   "dependencies": {
     "@expo/ui": "~58.0.28",
