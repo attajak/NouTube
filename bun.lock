@@ -44,7 +44,6 @@
         "i18next": "^25.10.10",
         "jszip": "^3.10.2",
         "nativewind": "^4.2.7",
-        "noutube": "link:.",
         "papaparse": "^5.7.1",
         "react": "19.3.0",
         "react-dom": "19.3.0",
@@ -1342,8 +1341,6 @@
     "node-releases": ["node-releases@2.0.64", "", {}, "sha512-zAPCKqMcnqs2nGy6nlkm7JduFseiBJy3EXHGLh+8pFR+TxGCBxxiEN21+UROU5CKwX/f4TlUcYjiM+vs/tsyxw=="],
 
     "normalize-path": ["normalize-path@3.0.0", "", {}, "sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA=="],
-
-    "noutube": ["noutube@link:.", {}],
 
     "noxcturnal": ["noxcturnal@0.1.13", "", { "dependencies": { "@babel/code-frame": "^7.20.0", "@oxc-project/types": "0.154.0" }, "optionalDependencies": { "@noxcturnal/noxcturnal-darwin-arm64": "0.1.13", "@noxcturnal/noxcturnal-darwin-x64": "0.1.13", "@noxcturnal/noxcturnal-linux-arm64-gnu": "0.1.13", "@noxcturnal/noxcturnal-linux-arm64-musl": "0.1.13", "@noxcturnal/noxcturnal-linux-x64-gnu": "0.1.13", "@noxcturnal/noxcturnal-linux-x64-musl": "0.1.13", "@noxcturnal/noxcturnal-win32-arm64-msvc": "0.1.13", "@noxcturnal/noxcturnal-win32-x64-msvc": "0.1.13" } }, "sha512-tkocqnMQWNeH+LYxKo4CyxPknT9l7ns6m156l5S291/+/giM98vRol28+wOHej1NhYjVnaN38wWqPXytuj9Kcw=="],
 
