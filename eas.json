@@ -23,7 +23,7 @@
     },
     "production": {
       "credentialsSource": "remote",
-      "autoIncrement": true
+      "autoIncrement": true,
       "android": {
          "gradleCommand": ":assembleFullRelease"
       },
