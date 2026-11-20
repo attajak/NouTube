@@ -26,14 +26,11 @@ let blocklist = createDefaultBlocklistSnapshot()
 const getPlayer = (): any => document.getElementById('movie_player')
 
 let bridged = false
-function bridgeShortcuts() {
+function bridgePaste() {
   if (bridged) {
     return
   }
   bridged = true
-  window.addEventListener('keyup', (e) => {
-    emit('keyup', { key: e.key, metaKey: e.metaKey, ctrlKey: e.ctrlKey })
-  })
   window.addEventListener('paste', (e) => {
     /* Leave pastes into YouTube's search box, comment box etc. alone. */
     if (isEditable(e.target) || isEditable(document.activeElement)) {
@@ -269,7 +266,7 @@ export function initNouTube() {
     },
     playDefaultAudio,
     restoreLastPlaying,
-    bridgeShortcuts,
+    bridgePaste,
     getPlayerFormats,
   }
 }

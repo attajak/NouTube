@@ -10,9 +10,9 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
     payload: any
     onreadystatechange?: () => void
     args: any[] = []
-    get response() {
-      return this.responseType === 'json' ? this.payload : JSON.stringify(this.payload)
-    }
+    sent: any
+    send(body: any) { this.sent = body }
+    get response() { return this.responseType === 'json' ? this.payload : JSON.stringify(this.payload) }
     get responseText() {
       if (this.responseType === 'json') throw new Error('InvalidStateError')
       return JSON.stringify(this.payload)
@@ -30,7 +30,7 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
   const globals = ['window', 'location', 'XMLHttpRequest'] as const
   const saved = globals.map((key) => Object.getOwnPropertyDescriptor(globalThis, key))
   const originalFetch = globalThis.fetch
-  const win: any = { NouTube: { getSettings: () => ({ blockAds: true }), shortsHidden: true } }
+  const win: any = { NouTubeNoAdRequests: true, NouTube: { getSettings: () => ({ blockAds: true }), shortsHidden: true } }
   try {
     Object.assign(globalThis, { window: win, location: { origin: 'https://m.youtube.com' }, XMLHttpRequest: FakeXHR })
     intercept()
@@ -48,6 +48,8 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
     }
     xhr.open('POST', '/youtubei/v1/player', false, 'user', 'password')
     expect(xhr.args).toEqual(['POST', '/youtubei/v1/player', false, 'user', 'password'])
+    xhr.send('{"videoId":"first"}')
+    expect(JSON.parse(xhr.sent).params).toBe('oAEBogYBLg')
     xhr.complete({ adPlacements: [{}], videoDetails: { videoId: 'first' } })
     expect(JSON.parse(observed)).toEqual({ videoDetails: { videoId: 'first' } })
     expect(xhr.responseText).toBe(observed)
@@ -60,13 +62,25 @@ it('filters XHR before early listeners read it, supports JSON and reuse, and pre
     expect(() => xhr.responseText).toThrow('InvalidStateError')
 
     xhr.open('GET', '/unrelated')
+    xhr.send('{"params":"keep"}')
+    expect(JSON.parse(xhr.sent).params).toBe('keep')
     xhr.complete({ adSlots: [{}], untouched: true })
     expect(observed).toEqual({ adSlots: [{}], untouched: true })
 
     win.NouTube.getSettings = () => ({ blockAds: false })
     xhr.open('POST', '/youtubei/v1/player')
+    xhr.send('{"params":"keep"}')
+    expect(JSON.parse(xhr.sent).params).toBe('keep')
     xhr.complete({ adPlacements: [{}] })
     expect(observed.adPlacements).toHaveLength(1)
+    // Only the explicit gate enables the request changes, not the legacy
+    // isAndroid flag (which is also set on iOS).
+    win.NouTube.getSettings = () => ({ blockAds: true })
+    win.isAndroid = true
+    win.NouTubeNoAdRequests = false
+    xhr.open('POST', '/youtubei/v1/player')
+    xhr.send('{"params":"original"}')
+    expect(JSON.parse(xhr.sent).params).toBe('original')
   } finally {
     globals.forEach((key, i) => {
       if (saved[i]) Object.defineProperty(globalThis, key, saved[i]!)

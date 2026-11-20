@@ -1,7 +1,7 @@
 import 'ts-node/register'
 
 import { ExpoConfig } from 'expo/config'
-import { version, versionCode, buildNumber } from './package.json'
+import { version, versionCode, buildNumber, iosVersion } from './package.json'
 
 const intentFilters = [
   {
@@ -28,11 +28,15 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => {
       supportsTablet: true,
       bundleIdentifier: 'jp.nonbili.noutube_dev',
       appleTeamId: 'NXW8RMPV8L',
+      // Pinned so new builds stay on the same TestFlight version and skip beta review.
+      version: iosVersion,
       buildNumber,
       infoPlist: {
         // The player keeps going with the screen off and on the lock screen.
         UIBackgroundModes: ['audio'],
         NSMicrophoneUsageDescription: 'Voice search on YouTube uses the microphone.',
+        // Only standard HTTPS, so builds skip the export compliance prompt.
+        ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {

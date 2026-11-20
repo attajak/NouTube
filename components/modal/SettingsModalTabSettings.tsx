@@ -143,6 +143,7 @@ const distractionFreeStyleRows: { id: BuiltinUserStyleId; icon: MaterialIconsIco
   { id: 'hide-mix-playlist', icon: 'playlist-play' },
   { id: 'hide-community-posts', icon: 'forum' },
   { id: 'hide-ask-button', icon: 'auto-awesome' },
+  { id: 'hide-comments', icon: 'comments-disabled' },
 ]
 
 const distractionFreeStyleDefinitions = distractionFreeStyleRows.map((row) => ({
@@ -1143,6 +1144,14 @@ export const SettingsToolsContent = () => {
     <View>
       <SettingsSection label={t('settings.tools')}>
         <View className={surfaceCls}>
+          {nIf(
+            isWeb,
+            <SettingsActionRow
+              label={t('shortcuts.title')}
+              icon="keyboard"
+              onPress={() => ui$.shortcutsModalOpen.set(true)}
+            />,
+          )}
           {sleepTimerSupported ? (
             <SettingsActionRow
               label={t('sleepTimer.label')}

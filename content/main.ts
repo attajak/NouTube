@@ -1,4 +1,5 @@
 import { intercept } from './intercept'
+import { installNoAdWatchLinks } from './no-ad-request'
 import { installH264ify } from './h264ify'
 import { installClickbaitThumbnails } from './clickbait'
 import { injectCSS } from './css'
@@ -14,10 +15,12 @@ import { installCommentTranslateButtons } from './translate'
 import { interceptClipboard } from './clipboard'
 import { installWatchNavigation } from './watch-nav'
 import { installFullscreenControls } from './fullscreen-controls'
+import { installIOSFullscreen } from './ios-fullscreen'
 import { installSystemCaptionStyle } from './captions'
 import { installEncodedAuthorNameFix } from './author-names'
 import { guardMediaSessionHandlers, installBackgroundGuard } from './background-guard'
 import { installSplitView, navigateWatch, setMuted, setNativeMini } from './split-view'
+import { installPlayerGestures } from './player-gestures'
 
 try {
   if ((window as any).NouTubePreferH264) {
@@ -37,6 +40,8 @@ try {
   }
 
   window.NouTube = initNouTube()
+  installIOSFullscreen()
+  if ((window as any).NouTubeNoAdRequests) installNoAdWatchLinks()
   ;(window.NouTube as any).setMuted = setMuted
   ;(window.NouTube as any).setNativeMini = setNativeMini
   ;(window.NouTube as any).navigateWatch = navigateWatch
@@ -91,6 +96,7 @@ async function initObserver() {
   installBlocklistFilter()
   installDislikeCount()
   installDoubleTapGestures()
+  installPlayerGestures()
   installFullscreenControls()
   installCommentTranslateButtons()
   installEncodedAuthorNameFix()

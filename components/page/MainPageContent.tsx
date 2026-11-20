@@ -4,6 +4,7 @@ import { ui$, updateUrl } from '@/states/ui'
 import { tabs$, type Tab } from '@/states/tabs'
 import { queue$ } from '@/states/queue'
 import { settings$ } from '@/states/settings'
+import { watchLoadUrl } from '@/lib/watch-load-url'
 import { bookmarks$, newBookmark } from '@/states/bookmarks'
 import { createLogger } from '@/lib/log'
 import { EmbedVideoModal } from '@/components/modal/EmbedVideoModal'
@@ -30,10 +31,10 @@ import { describeDownloadError } from '@/lib/download-error'
 import { t } from 'i18next'
 import { downloads$ } from '@/states/downloads'
 import { resolveUserAgent } from '@/lib/useragent'
-import { handleShortcuts } from '@/desktop/src/renderer/lib/shortcuts'
 import { retryNativeViewCall } from '@/lib/native-view-call'
 import { openPastedUrl } from '@/lib/paste-url'
 import { usePasteUrl } from '@/lib/hooks/usePasteUrl'
+import { useWebviewFocusReturn } from '@/lib/hooks/useWebviewFocusReturn'
 import { history$ } from '@/states/history'
 import { buildUserScriptSources, userScriptsInvalidationSource } from '@/lib/user-styles'
 import { getUserStylesSnapshot, userStyles$ } from '@/states/user-styles'
@@ -112,6 +113,27 @@ const executeQuietly = (webview: WebviewTag | null, script: string) => {
   } catch {}
 }
 
+// WebKit throws on localStorage while the webview is still on about:blank,
+// which must not keep the settings from reaching a page that is already up.
+const settingsSyncScript = (value: string) =>
+  `try { localStorage.setItem('nou:settings', '${value}') } catch {} window.NouTube?.setSettings?.(${value})`
+
+/* Keeps a background tab's video paused until the tab is first shown, so
+ * restoring several watch pages at startup does not play them all at once.
+ * Media events do not bubble, hence the capture listener on the document. */
+const holdPlaybackSource = `(() => {
+  window._nou_holdPlayback = true
+  const pause = (video) => { try { video.pause() } catch {} }
+  if (!window._nou_holdPlaybackInstalled) {
+    window._nou_holdPlaybackInstalled = true
+    document.addEventListener('play', (e) => {
+      if (window._nou_holdPlayback && e.target instanceof HTMLMediaElement) pause(e.target)
+    }, true)
+  }
+  document.querySelectorAll('video, audio').forEach((video) => { if (!video.paused) pause(video) })
+})()`
+const releasePlaybackSource = 'window._nou_holdPlayback = false'
+
 /* Tells the page which half of the split watch view it is, so it can hand over
  * the links the other half owns (see content/split-view.ts). */
 const splitRolePrelude = (enabled: boolean, role: 'browse' | 'player', mini = false) =>
@@ -164,6 +186,10 @@ const DesktopTabView: React.FC<{
   const readyRef = useRef(false)
   const initialUrlRef = useRef(tab.pageUrl || tab.url)
   const lastRequestedUrlRef = useRef(tab.url)
+  // Set for a tab mounted in the background (every inactive tab on restore)
+  // and cleared the first time it is shown; a tab switched away from keeps
+  // playing as before.
+  const holdPlaybackRef = useRef(!isActive)
   const hideShorts = useValue(settings$.hideShorts)
   const preferH264 = useValue(settings$.preferH264)
   const clickbaitThumbnail = useValue(settings$.clickbaitThumbnail)
@@ -194,10 +220,7 @@ const DesktopTabView: React.FC<{
     if (!readyRef.current) return
     const settings = getContentSettingsSnapshot()
     const value = JSON.stringify(settings)
-    executeQuietly(
-      webviewRef.current,
-      `localStorage.setItem('nou:settings', '${value}'); window.NouTube?.setSettings?.(${value})`,
-    )
+    executeQuietly(webviewRef.current, settingsSyncScript(value))
   }, [])
 
   const toggleShorts = useCallback((hide?: boolean) => {
@@ -217,6 +240,12 @@ const DesktopTabView: React.FC<{
   useEffect(() => {
     if (!isActive || !webviewRef.current) {
       return
+    }
+    if (holdPlaybackRef.current) {
+      holdPlaybackRef.current = false
+      if (readyRef.current) {
+        executeQuietly(webviewRef.current, releasePlaybackSource)
+      }
     }
     ui$.webview.set(ObservableHint.opaque(webviewRef.current))
     ui$.pageUrl.set(tab.pageUrl || tab.url)
@@ -251,11 +280,14 @@ const DesktopTabView: React.FC<{
       if (isActive) {
         ui$.webview.set(ObservableHint.opaque(webview))
       }
+      if (holdPlaybackRef.current) {
+        executeQuietly(webview, holdPlaybackSource)
+      }
       // Bridged on the webview we just injected into, so background tabs get
-      // the keyboard and paste listeners too.
+      // the paste listener too.
       executeQuietly(
         webview,
-        `window.isAndroid = false;\n${buildPrelude()}\n${contentJs}\n;window.NouTube?.bridgeShortcuts?.()`,
+        `window.isAndroid = false;\n${buildPrelude()}\n${contentJs}\n;window.NouTube?.bridgePaste?.()`,
       )
       // One call per script: a malformed script must not take the others, or
       // the content bundle above, down with it.
@@ -292,11 +324,6 @@ const DesktopTabView: React.FC<{
     const onTitle = (e: { title: string }) => {
       tabs$.setTabMeta({ title: e.title || webview.getTitle() }, index)
     }
-    const onInput = ((e: Electron.Event & { input: Electron.Input }) => {
-      if (e.input.type === 'keyDown') {
-        handleShortcuts(e.input)
-      }
-    }) as unknown as (e: Event) => void
 
     webview.addEventListener('dom-ready', onDomReady)
     webview.addEventListener('did-start-loading', onStartLoading)
@@ -309,7 +336,6 @@ const DesktopTabView: React.FC<{
     webview.addEventListener('ipc-message', onIpcMessage)
     webview.addEventListener('page-favicon-updated', onFavicon)
     webview.addEventListener('page-title-updated', onTitle)
-    webview.addEventListener('before-input-event', onInput)
 
     return () => {
       webview.removeEventListener('dom-ready', onDomReady)
@@ -323,7 +349,6 @@ const DesktopTabView: React.FC<{
       webview.removeEventListener('ipc-message', onIpcMessage)
       webview.removeEventListener('page-favicon-updated', onFavicon)
       webview.removeEventListener('page-title-updated', onTitle)
-      webview.removeEventListener('before-input-event', onInput)
     }
   }, [
     buildPrelude,
@@ -382,6 +407,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
   const pageUrl = useValue(ui$.pageUrl)
   const embedVideoId = useValue(ui$.embedVideoId)
   usePasteUrl()
+  useWebviewFocusReturn()
   const tabs = useValue(tabs$.tabs)
   const activeTabIndex = useValue(tabs$.activeTabIndex)
   const activePageUrl = useValue(tabs$.activePageUrl)
@@ -455,6 +481,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
   const userStylesState = useValue(userStyles$)
   const userScriptsOnStart = buildUserScriptSources(getUserStylesSnapshot(userStylesState))
   const preludeJs =
+    `window.NouTubeNoAdRequests = ${isAndroid || isIos};` +
     `window.NouTubeInitialSettings = ${JSON.stringify(contentSettings)};` +
     `window.NouTubeHideShorts = ${hideShorts ? 'true' : 'false'};` +
     `window.NouTubePreferH264 = ${preferH264 ? 'true' : 'false'};` +
@@ -531,7 +558,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
   const toggleShorts = useCallback(
     (hide?: boolean) => {
       for (const ref of nativeViews()) {
-        ref.executeJavaScript(hide ? 'NouTube.hideShorts()' : 'NouTube.showShorts()')
+        executeQuietly(ref, hide ? 'window.NouTube?.hideShorts?.()' : 'window.NouTube?.showShorts?.()')
       }
     },
     [nativeViews],
@@ -541,10 +568,10 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
     const snapshot = getUserStylesSnapshot()
     const value = JSON.stringify(snapshot)
     for (const ref of nativeViews()) {
-      ref.executeJavaScript(`window.NouTube.setUserStyles(${value})`)
-      ref.executeJavaScript(userScriptsInvalidationSource)
+      executeQuietly(ref, `window.NouTube?.setUserStyles?.(${value})`)
+      executeQuietly(ref, userScriptsInvalidationSource)
       for (const source of buildUserScriptSources(snapshot)) {
-        ref.executeJavaScript(source)
+        executeQuietly(ref, source)
       }
     }
   }, [nativeViews])
@@ -553,7 +580,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
     const snapshot = getBlocklistSnapshot()
     const value = JSON.stringify(snapshot)
     for (const ref of nativeViews()) {
-      ref.executeJavaScript(`window.NouTube?.setBlocklist?.(${value})`)
+      executeQuietly(ref, `window.NouTube?.setBlocklist?.(${value})`)
     }
     if (isWeb) {
       void mainClient.setBlocklist(snapshot)
@@ -564,7 +591,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
     const settings = getContentSettingsSnapshot()
     const value = JSON.stringify(settings)
     for (const ref of nativeViews()) {
-      ref.executeJavaScript(`localStorage.setItem('nou:settings', '${value}'); window.NouTube?.setSettings?.(${value})`)
+      executeQuietly(ref, settingsSyncScript(value))
     }
     if (isWeb) {
       // Electron strips ads in the main process rather than in the page (see
@@ -796,9 +823,6 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
           ui$.toolsModalUrl.set(data.url)
           ui$.toolsModalOpen.set(true)
           break
-        case 'keyup':
-          handleShortcuts(data)
-          break
         case 'paste':
           openPastedUrl(data)
           break
@@ -875,10 +899,10 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
         try {
           const location = await webview.executeJavaScript('document.location.href')
           if (location == 'about:blank') {
-            webview.loadUrl(browseUrl)
+            webview.loadUrl(watchLoadUrl(browseUrl))
           }
         } catch (e) {
-          webview.loadUrl(browseUrl)
+          webview.loadUrl(watchLoadUrl(browseUrl))
         }
       })()
     }
@@ -907,7 +931,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
       openInBrowse(value)
       return
     }
-    nativeRef.current?.loadUrl(value)
+    nativeRef.current?.loadUrl(watchLoadUrl(value))
   })
 
   // The player webview is mounted for the whole session once the split is on,
@@ -976,7 +1000,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
       closePlayer()
       setPlayerWebview(null)
       // Reload even if no video was opened, removing the page's split handlers.
-      nativeRef.current?.loadUrl(url || 'https://m.youtube.com/')
+      nativeRef.current?.loadUrl(watchLoadUrl(url || 'https://m.youtube.com/'))
       return
     }
     const url = ui$.pageUrl.get() || ui$.browsePageUrl.get()
@@ -1257,7 +1281,7 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
                     const url = (loadError?.canReload && loadError.url) || fallback
                     setLoadError(errored, null)
                     const view = playerFull ? playerRef.current : nativeRef.current
-                    view?.loadUrl(url)
+                    view?.loadUrl(watchLoadUrl(url))
                   }}
                 />
               </View>,
